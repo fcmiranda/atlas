@@ -1,0 +1,13 @@
+{
+	"zip": {
+		"path": "//logsusabilidade/logs/Usabilidade",
+		"prod": "//logsusabilidade/logs/Usabilidade"
+	},
+	"file": {
+		"path": "./logs/temporario"
+	},
+	
+	"temp": {
+		"name": "t3p-YYYYMMDD"
+	}
+}

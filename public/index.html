@@ -1,0 +1,126 @@
+<!doctype html>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html ng-app="app">
+<head>
+	<!-- META -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+	<title>Node/Angular Todo App</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css"><!-- load bootstrap -->
+	<link rel="stylesheet" href="css/daterangepicker.css">
+	<style>
+		html 					{ overflow-y:scroll; }
+		body 					{ padding-top:10px; }
+		#todo-list 				{ margin-bottom:30px; }
+		#todo-form 	 			{ margin-bottom:50px; }
+		#list 					{ overflow-y: scroll; height: 100px;}
+		#list2 					{ overflow: scroll;
+								    height: 450px;
+								    white-space: pre;}
+
+		@media (max-width: 368px)
+		{
+			.col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12{
+				padding-right: 0px;
+	    		padding-left: 0px;
+			}
+		}
+
+		.panel {
+   			 margin-bottom: 5px;
+   		}
+
+   		span.ex-1 {
+		    color: red;
+		}
+
+
+	</style>
+	<script src="lib/angular.js"></script>
+	<script src="lib/moment.js"></script>
+	<script src="lib/jquery-2.2.3.min.js"></script>
+	<script src="lib/daterangepicker.js"></script>
+	<script src="lib/pt-br.js"></script>
+	<script src="lib/ui-bootstrap-tpls-2.1.3.js"></script>
+	<script src="lib/lodash.core.min.js"></script>
+	<script src="lib/checklist-model.js"></script>
+	<script src="lib/ngStorage.js"></script>
+	<script src="lib/angular-sanitize.min.js"></script>
+	<script src="core.js"></script>
+	<script src="/reload/reload.js"></script> 
+	<script src="app/data/data-utils.fabrica.js"></script>
+	<script src="app/data/spt-data.controle.js"></script>
+	<script src="app/data/spt-data.diretiva.js"></script>
+	<script src="app/data/spt-data-hora.diretiva.js"></script>
+	<script src="app/data/spt-data-intervalo.diretiva.js"></script>
+	<script src="app/data/spt-data-intervalo.controle.js"></script>
+	<script src="app/export/export.directive.js"></script>
+
+</head>
+<body>
+	<div class="col-md-12 col-sm-12" id="filter">
+		<div class="panel panel-default">
+			<div class="panel-heading">Logs APP</div>
+			<div class="panel-body">
+				<form name="form">
+			
+					<div class="col-md-2 ">
+						<label>
+							<input type="radio" ng-model="localStorage.mode" value="date">
+							Data
+						</label><br/>
+						<label>
+							<input type="radio" ng-model="localStorage.mode" value="file">
+							Arquivo
+						</label><br/>
+						<label>
+							Expressão: <input ng-required="true" ng-model="formData.expression" class="form-control">
+						</label>
+						<div class="text-center">
+							<button  ng-if="localStorage.mode == 'file'" type="button" class="btn btn-primary" ng-click="download()">Download zip</button>
+							<button  ng-if="localStorage.mode == 'date'" type="button" class="btn btn-primary" ng-click="exportByDate()">Enviar</button>
+							<button  ng-if="localStorage.mode == 'file'" type="button" class="btn btn-primary" ng-click="form.$valid && (formData.files.length > 0) && exportByFiles()">Enviar</button>
+							<button  ng-if="extracted" export text="extracted" name="savedExpression" type="button" class="btn btn-primary">Download</button>
+						</div>
+					</div>
+					
+					<div ng-if="localStorage.mode == 'date'" class="col-md-6">
+							<spt-data-intervalo
+							inicio="formData.start"
+							label-data-inicio="Início:"
+							classe-label="col-sm-12 col-xs-1"
+							classe-data="col-sm-3 col-xs-5"
+							classe-hora="col-sm-6 col-xs-5"
+							fim="formData.end"
+							hora="true"
+							label-data-fim="Fim:">
+						</spt-data-intervalo>					
+					</div>
+					<div ng-if="localStorage.mode == 'file'" class="col-md-3">
+						<button class="btn btn-primary" ng-click="formData.files = []">limpa</button> 
+						<div id="list">
+							<label ng-repeat="file in files | orderBy : '-'" class="col-md-12">
+								<input type="checkbox" checklist-model="formData.files" checklist-value="file"> {{file}}
+							</label>
+						</div>												
+					</div>					
+				</form>
+				</div>
+		</div>
+	<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{alert.msg}}</div>	
+	<ul>
+		<li ng-if="localStorage.mode == 'file' && (!formData.files || formData.files.length == 0)">
+			<span class="ex-1"  >Arquivos não selecionados</span>
+		</li>
+		<li ng-if="!formData.expression">
+			<span class="ex-1" >Expressão vazia</span>
+		</li>
+	</ul>
+</div>
+
+<pre id="list2" class="col-md-12" ng-bind-html="extractedHTML" ng-if="extracted" resize></pre>
+<div ng-if="extracted == ''" >Nenhuma informação encontrada</div>
+
+</body>
+</html>

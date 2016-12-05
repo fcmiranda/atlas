@@ -1,0 +1,30 @@
+<div>	
+	<div class="form-group">
+		<label for="inicio" class="{{classeLabel}} control-label" ng-bind="labelDataInicio"></label>
+		<div>
+			<div class="{{classeData}}">
+				<spt-data id="inicio" model="inicio" maxima="fim" mascara="39/19/9999" placeholder="dd/mm/aaaa" required="requiredInicio"></spt-data>
+			</div>
+			<div class="form-horizontal" ng-show="!!hora && (!horaPosSelecaoData || !!inicio)">
+				<div class="form-inline">
+					<label class="pull-left control-label" ng-bind="labelHoraInicio"></label>
+					<spt-data-hora model="inicio" class="{{classeHora}}"  maxima="fim" ></spt-data-hora>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="fim" class="{{classeLabel}} control-label" ng-bind="labelDataFim"></label>
+		<div>
+			<div class="{{classeData}}">
+				<spt-data id="fim" model="fim" minima="inicio" mascara="39/19/9999" placeholder="dd/mm/aaaa" required="requiredFim"></spt-data>
+			</div>
+			<div class="form-horizontal" ng-show="!!hora && (!horaPosSelecaoData || !!fim)">
+				<div class="form-inline">
+					<label class="pull-left control-label" ng-bind="labelHoraFim"></label>
+					<spt-data-hora model="fim" class="{{classeHora}}"  minima="inicio" ></spt-data-hora>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
