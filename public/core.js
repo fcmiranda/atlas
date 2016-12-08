@@ -66,19 +66,33 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage) {
 	};
 
 	function asHTML(text) {
-
-		var expression = new RegExp($rootScope.savedExpression, "g");
-		
-		return text.replace(/(?:\r\n|\r|\n)/g, '<span>\n</span>')
-					.replace(expression, '<span class="ex-1">'+ $rootScope.savedExpression + '</span>');
+		var expression = new RegExp($rootScope.savedExpression, "g");		
+		return text;
+		//return text.replace(/(?:\r\n|\r|\n)/g, '<span>\n</span>')	.replace(expression, '<span class="ex-1">'+ $rootScope.savedExpression + '</span>');
 	}
 
 	$rootScope.closeAlert = function(index) {
 	    $rootScope.alerts.splice(index, 1);
 	};
 
-	$rootScope.transform = function () {
-		$rootScope.extracted = $rootScope.extracted;
+	$rootScope.newZip = function () {		
+		$http.post('/zip', {
+		})
+		.then(
+			function (response) {					
+				$rootScope.extracted = response.data.extracted;
+				$rootScope.extractedHTML = response.data.extracted;
+
+				$http.get('/files').then(
+				function (response) {					
+					$rootScope.files = response.data;
+				}, function (response) {
+
+				});
+			}, function (response) {
+				$rootScope.alerts = [{msg: response.data.message, type: 'danger'}];
+			}
+		);
 	}
 
 });

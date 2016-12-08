@@ -1,7 +1,6 @@
 var fs = require('fs');
 var path = require('path');
 var fstream = require('fstream');
-var unzip = require('unzip');
 var _ = require('lodash');
 var encoding = require("encoding");
 var iconv = require('iconv-lite');
@@ -112,8 +111,13 @@ function generate (dir, obj, expression){
 		var array = iconv.decode(binary, 'win1252').split("\n");	
 		var i = array.length;
 
+
+		RegExp.escape = function(text) {
+		  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+		};
+
 		while (i--) {
-			if(array[i].indexOf(expression) <= -1 || obj.lines.indexOf(array[i]) > -1){
+			if(!array[i].match(new RegExp(expression)) || obj.lines.indexOf(array[i]) > -1){
 				array.splice(i, 1);
 			}
 		}

@@ -36,16 +36,14 @@ app.post('/extractFiles', function (req, res) {
 	log.extractFiles(body.files, body.expression, res);
 });
 
-app.get('/download', function (req, res) {
-	child_process.exec('teste.bat', function(error, stdout, stderr) {
-	    console.log(stdout);
-	    res.json({extracted: obj.lines.join('\n')});
+app.post('/zip', function (req, res) {
+	var wait  = '-a'; //wait 5 seconds
+	var child_process = require('child_process')
+	child_process.exec('teste.bat '+ wait, function(error, stdout, stderr) {
+	  console.log(stdout);
+	    res.json({extracted: stdout});
 	});
 });
-
-
-
-
 
 var server = http.createServer(app);
 

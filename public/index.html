@@ -78,7 +78,7 @@
 							Expressão: <input ng-required="true" ng-model="formData.expression" class="form-control">
 						</label>
 						<div class="text-center">
-							<button  ng-if="localStorage.mode == 'file'" type="button" class="btn btn-primary" ng-click="download()">Download zip</button>
+							<button type="button" class="btn btn-primary" ng-click="newZip()">Download zip</button>
 							<button  ng-if="localStorage.mode == 'date'" type="button" class="btn btn-primary" ng-click="exportByDate()">Enviar</button>
 							<button  ng-if="localStorage.mode == 'file'" type="button" class="btn btn-primary" ng-click="form.$valid && (formData.files.length > 0) && exportByFiles()">Enviar</button>
 							<button  ng-if="extracted" export text="extracted" name="savedExpression" type="button" class="btn btn-primary">Download</button>

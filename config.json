@@ -1,6 +1,6 @@
 {
 	"zip": {
-		"path": "//logsusabilidade/logs/Usabilidade",
+		"path": "./util/zips",
 		"prod": "//logsusabilidade/logs/Usabilidade"
 	},
 	"file": {
