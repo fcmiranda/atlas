@@ -1,0 +1,85 @@
+<!doctype html>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html >
+<head>
+	<!-- META -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="css/font.css">
+	<style>
+		body {
+			font-family: Roboto;
+		}
+	</style>
+
+</head>
+<body>
+
+Teste ahahaha nossaassadc
+
+	<!-- <div class="col-md-12 col-sm-12" id="filter">
+		<div class="panel panel-default">
+			<div class="panel-heading">Logs APP</div>
+			<div class="panel-body">
+				<form name="form">
+			
+					<div class="col-md-2 ">
+						<label>
+							<input type="radio" ng-model="localStorage.mode" value="date">
+							Data
+						</label><br/>
+						<label>
+							<input type="radio" ng-model="localStorage.mode" value="file">
+							Arquivo
+						</label><br/>
+						<label>
+							Expressão: <input ng-required="true" ng-model="formData.expression" class="form-control">
+						</label>
+						<div class="text-center">
+							<button type="button" class="btn btn-primary" ng-click="newZip()">Download zip</button>
+							<button  ng-if="localStorage.mode == 'date'" type="button" class="btn btn-primary" ng-click="exportByDate()">Enviar</button>
+							<button  ng-if="localStorage.mode == 'file'" type="button" class="btn btn-primary" ng-click="form.$valid && (formData.files.length > 0) && exportByFiles()">Enviar</button>
+							<button  ng-if="extracted" export text="extracted" name="savedExpression" type="button" class="btn btn-primary">Download</button>
+						</div>
+					</div>
+					
+					<div ng-if="localStorage.mode == 'date'" class="col-md-6">
+							<spt-data-intervalo
+							inicio="formData.start"
+							label-data-inicio="Início:"
+							classe-label="col-sm-12 col-xs-1"
+							classe-data="col-sm-3 col-xs-5"
+							classe-hora="col-sm-6 col-xs-5"
+							fim="formData.end"
+							hora="true"
+							label-data-fim="Fim:">
+						</spt-data-intervalo>					
+					</div>
+					<div ng-if="localStorage.mode == 'file'" class="col-md-3">
+						<button class="btn btn-primary" ng-click="formData.files = []">limpa</button> 
+						<div id="list">
+							<label ng-repeat="file in files | orderBy : '-'" class="col-md-12">
+								<input type="checkbox" checklist-model="formData.files" checklist-value="file"> {{file}}
+							</label>
+						</div>												
+					</div>					
+				</form>
+				</div>
+		</div>
+	<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{alert.msg}}</div>	
+	<ul>
+		<li ng-if="localStorage.mode == 'file' && (!formData.files || formData.files.length == 0)">
+			<span class="ex-1"  >Arquivos não selecionados</span>
+		</li>
+		<li ng-if="!formData.expression">
+			<span class="ex-1" >Expressão vazia</span>
+		</li>
+	</ul>
+</div>
+
+<pre id="list2" class="col-md-12" ng-bind-html="extractedHTML" ng-if="extracted" resize></pre>
+<div ng-if="extracted == ''" >Nenhuma informação encontrada</div>
+
+</body> -->
+</html>
