@@ -2,7 +2,6 @@ var fs = require('fs');
 var path = require('path');
 var fstream = require('fstream');
 var _ = require('lodash');
-var encoding = require("encoding");
 var iconv = require('iconv-lite');
 var unzipSync = require('unzip-sync');
 var Fiber = require('fibers');

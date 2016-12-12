@@ -1,12 +1,12 @@
-var app = angular.module('app', ['ui.bootstrap', 'checklist-model', 'ngStorage', 'ngSanitize', 'ngMaterial']);
+var app = angular.module('app', ['ui.bootstrap', 'checklist-model', 'ngStorage', 'ngSanitize', 'ngMaterial', 'ngMessages', 'cgBusy']);
 
-app.run(function($rootScope, $http, $timeout, $interval, $localStorage) {
+app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast) {
 
 })
-.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $localStorage, $http, $element) {
+.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $localStorage, $http, $element, $mdToast) {
     $scope.count = 0;	
 	$scope.formData = {
-		expression: 'falha',
+		expression: 'teste',
 		start: moment(0, "HH"),
 		end: moment()		
 	};
@@ -14,11 +14,23 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage) {
 	$scope.localStorage.mode = $scope.localStorage.mode || "date";
 	$scope.files = [];
 	$scope.clicked = false;
-	$scope.searchTerm = moment().format('YYYY');
+	$scope.searchTerm = '';
+	$scope.data = {
+      selectedIndex: 0,
+      secondLabel:   "Item Two",
+      bottom:        false
+    };
+    $scope.next = function() {
+      $scope.data.selectedIndex = Math.min($scope.data.selectedIndex + 1, 2) ;
+    };
+    $scope.previous = function() {
+      $scope.data.selectedIndex = Math.max($scope.data.selectedIndex - 1, 0);
+    };
 
 	$http.get('/files').then(
 		function (response) {					
 			$scope.files = response.data;
+			$scope.formData.selectedFiles = [response.data[0]];
 		}
 	);
 
@@ -46,24 +58,17 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage) {
 	};
 
 	$scope.exportByFiles = function () {
-		$scope.alerts = [];
-		delete $scope.extracted;
-		$scope.alerts = [{msg: 'processando...', type: 'warning'}];
-		$scope.savedExpression =  $scope.formData.expression;			
-
-		$http.post('/extractFiles', {
-			expression: $scope.formData.expression,
-			files: $scope.formData.files
-		})
-		.then(
-			function (response) {					
-				$scope.session = response.data.session;
+		$scope.promise = $http.post('/extractFiles', {
+			expressions: $scope.formData.expression,
+			files: $scope.formData.selectedFiles
+		}).then(
+			function (response) {
 				$scope.extracted = response.data.extracted;
 				$scope.extractedHTML = asHTML(response.data.extracted);
 				$scope.alerts = [];		
 			
 			}, function (response) {
-				$scope.alerts = [{msg: response.data.message, type: 'danger'}];
+				$scope.toast(response.data.message,'error');
 			}
 		);			
 	};
@@ -102,31 +107,75 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage) {
 		$scope.searchTerm = ''
 	};
 
+	$scope.submit = function (){
+		$scope.exportByFiles();	
+	}
+
 	$element.find('input').on('keydown', function(ev) {
 	  ev.stopPropagation();
 	});
 
+
+	$scope.toast = function(text, type) {
+	    $mdToast.show({
+          hideDelay   : 3000,
+          position    : 'bottom left',
+          controller  : 'ToastCtrl',
+          templateUrl : 'app/toast/toast.html',
+          toast: {
+          	text: text,
+          	type: type
+          } 
+        });
+	  };
+
+	
+	var tabs = [
+          { title: 'One', content: "a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>"},
+          { title: 'Two', content: "You can swipe left and right on a mobile device to change tabs."}],
+        selected = null,
+        previous = null;
+    $scope.tabs = tabs;
+    $scope.selectedIndex = 0;
+    $scope.$watch('selectedIndex', function(current, old){
+      previous = selected;
+      selected = tabs[current];
+      if ( old + 1 && (old != current)) console.log('Goodbye ' + previous.title + '!');
+      if ( current + 1 )                console.log('Hello ' + selected.title + '!');
+    });
+    $scope.addTab = function (title, view) {
+      view = view || title + " Content View";
+      tabs.push({ title: title, content: view, disabled: false});
+    };
+    $scope.removeTab = function (tab) {
+      var index = tabs.indexOf(tab);
+      tabs.splice(index, 1);
+    };
+
  })
 .config(function($mdThemingProvider) {
-
 // Configure a dark theme with primary foreground yellow
-
 $mdThemingProvider.theme('docs-dark', 'default')
   .primaryPalette('yellow')
   .dark();
 
 })
-.filter('orderObjectBy', function() {
-  return function(items, field, reverse) {
-    var filtered = [];
-    angular.forEach(items, function(item) {
-      filtered.push(item);
-    });
-    filtered.sort(function (a, b) {
-      return (a[field] > b[field] ? 1 : -1);
-    });
-    if(reverse) filtered.reverse();
-    return filtered;
-  };
+.directive('ngEnter', function () {
+    return function (scope, elements, attrs) {
+        elements.bind('keydown keypress', function (event) {
+            if (event.which === 13) {
+                scope.$apply(function () {
+                    scope.form.$setSubmitted();
+                });
+                event.preventDefault();
+            }
+        });
+    };
+})
+.value('cgBusyDefaults',{
+  backdrop: false,
+  templateUrl: 'app/loader/loader.html',
+  delay: 300,
+  minDuration: 700,
+  wrapperClass: 'my-class my-class2'
 });
-;

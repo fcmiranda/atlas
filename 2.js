@@ -4,7 +4,7 @@ var async = require('async');
 
 const servers = [/*47,52,10,48,11,49,53,12,*/15,16];
 var start1 = new Date().getTime();
-var dates = ['20161209023810'];
+var dates = ['20161209'];
 var types = ['ASCW'];
 var rg = new RegExp('%DATE%', 'g');
 

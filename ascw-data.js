@@ -1,27 +1,25 @@
 var fs = require('fs');
 var iconv = require('iconv-lite');
 var async = require('async');
+var _ = require ('lodash');
 
 const servers = [/*47,52,10,48,11,49,53,12,*/15,16];
-var start1 = new Date().getTime();
-var dates = ['20161209023810'];
+var dates = ['20161209'];
 var types = ['ASCW'];
 var rg = new RegExp('%DATE%', 'g');
+var startTimeReport = new Date().getTime();
 
-var list = function() {
+var expressions = function() {
     return {
     "!NEW REQUEST": 0,
     "Delayed socket read 1 times":0,
     "Delayed socket read 50 times":0,
   }
 }
-
-var reportTotal = {  
-  list:list()
-}
+var reportList = [];
 
 var arr = []
-for(var key in list()){
+for(var key in expressions()){
   arr.push(key);
 }
 var patternList = arr.join('|');
@@ -39,57 +37,58 @@ dates.forEach((date, index) => {
 });
 var pattern = dates.join('|');
 
-servers.forEach( (server, index) => {  
+
+async.eachSeries(servers, function (server, callback) {  
   //*pt var dir = '//172.26.87.'+server+'/Avaya/IC73/logs';
   var dir = './server'+server//*dv
 
   var report = {
     server:'//172.26.87.'+server,
-    list:list()
+    expressions:expressions()
   };
 
   console.log('Reading directory ',dir);
 
-  fs.readdir(dir, (err, files) => {
-    
-    var readedFiles = 0;
-    var filtredFiles = 0;
+  fs.readdir(dir, function (err, files) {
+    var filtredFiles = [];
     files.forEach(file => {
       if((new RegExp(pattern)).test(file)){
-        filtredFiles = filtredFiles + 1;
+        filtredFiles.push(file);
       }
     });
-    
-    files.forEach(file => {
-      if((new RegExp(pattern)).test(file)){
-        
-        var startx = new Date().getTime();
+
+    var startTimeFileReading = new Date().getTime();
+    async.eachSeries(filtredFiles, function (file, callback) {
+ 
         var lineReader = require('readline').createInterface({
           input: require('fs').createReadStream(dir+'/'+file)          
         });
 
         lineReader.on('line', function (line) {          
-            var key = line.match(patternList);
-              first = key || '';              
-              report.list[key] = report.list[first[0]]+ 1;
-              reportTotal.list[key] = reportTotal.list[first[0]]+ 1;
+            var result = line.match(patternList); //return a array contain the result of match
+              result = result || ''; //handle null result            
+              report.expressions[_.first(result)]++; //increment the expression count    
         });
 
-        lineReader.on('close', function(){
-          readedFiles = readedFiles + 1;
-          if(filtredFiles == readedFiles){
-            var end1 = new Date().getTime();
-            var time = end1 - startx;
-
-            console.log(report);    
-            console.log(reportTotal);
-            console.log('Execution time on end readding ' + time/1000 + ' seconds');             
-          }
-        });        
-      }
+        lineReader.on('close', function(){          
+          callback();
+        });      
+     
+    }, function () {
+      reportList.push(report.expressions);
+      delete report.expressions.null;  
+      logTime('File', startTimeFileReading);
+      callback();    
     });
-/*    var end1 = new Date().getTime();
-    var time = end1 - start1;    
-    console.log('Execution time on ('+server+'):' + time/1000 + ' seconds'); */       
   });
+}, function(){
+  for(var key in expressions()){
+    reportList[key] = _.sumBy(reportList, key);
+  }
+  console.log(reportList);
+  logTime('Report', startTimeReport);
 });
+
+function logTime(string, start){
+    console.log(string + ' executed in ' + (new Date().getTime() - start)/1000 + ' seconds');
+}

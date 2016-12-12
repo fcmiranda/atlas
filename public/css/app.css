@@ -1,0 +1,186 @@
+	#todo-list { 
+		margin-bottom:30px; 
+	}
+	#todo-form { 
+		margin-bottom:50px; 
+	}
+	#list { 
+		overflow-y: scroll; height: 100px;
+	}
+	#list2 { 
+		overflow: scroll;
+		height: 450px;
+		white-space: pre;
+	}
+
+	@media (max-width: 368px)
+	{
+		.col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12{
+			padding-right: 0px;
+			padding-left: 0px;
+		}
+	}
+
+	.panel {
+		margin-bottom: 5px;
+	}
+
+	span.ex-1 {
+		color: red;
+	}
+
+	body {
+		overflow: hidden;
+		max-width: 100%;
+		max-height: 100%;
+	}
+
+	.selectdemoSelectHeader .demo-header-searchbox {
+		border: none;
+		outline: none;
+		height: 100%;
+		width: 100%;
+		padding: 0; 
+	}
+	.selectdemoSelectHeader .demo-select-header {
+		box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(0, 0, 0, 0.14), 0 0 0 0 rgba(0, 0, 0, 0.12);
+		padding-left: 10.667px;
+		height: 48px;
+		cursor: pointer;
+		position: relative;
+		display: flex;
+		align-items: center;
+		width: auto; 
+	}
+	.selectdemoSelectHeader md-content._md {
+		max-height: 240px; 
+
+	}
+
+	md-option {
+		height: 23px;
+	}
+
+	md-input-container .md-input.md-input {
+		line-height: 14px;
+		height: 19px;
+	}
+
+	md-input-container {
+		margin: 0px 0;
+	}
+
+	md-input-container .md-errors-spacer {
+		float: right;
+		min-height: 20px;
+		min-width: 1px;
+	}
+
+	md-select-menu[multiple] md-option.md-checkbox-enabled .md-container:after {
+		box-sizing: border-box;
+		content: '';
+		position: absolute;
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+		left: 0px;
+	}
+	md-input-container.md-input-focused:not([md-no-float]) .md-select-placeholder span:first-child {
+		-webkit-transform: translateY(-12px) translateX(-2px) scale(0.75);
+		transform: translateY(-12px) translateX(-2px) scale(0.75);
+	}
+	md-input-container.md-input-focused label:not(.md-no-float), md-input-container.md-input-has-placeholder label:not(.md-no-float), md-input-container.md-input-has-value label:not(.md-no-float) {
+		-webkit-transform: translate3d(0, 6px, 0) scale(0.75);
+		transform: translate3d(0, 6px, 0) scale(0.75);							
+	}
+
+	md-checkbox .md-icon {
+		width: 16px;
+		height: 17px;
+		top: -15px;
+	}
+
+	md-input-container.select {
+		top:-15px;
+	}
+	md-input-container.select.md-input-invalid {
+		top: -8px;
+	}
+
+	md-optgroup {
+		display: block;
+		margin-top: 34px;
+	}
+
+	
+
+	md-select {
+		max-width: 210px;
+	}
+
+	md-checkbox .md-container .md-ripple-container {
+		position: absolute;
+		display: block;
+		width: auto;
+		height: auto;
+		left: -15px;
+		top: -26px;
+		right: -9px;
+		bottom: 5px;
+	}
+
+	md-switch {
+		margin: 0;
+		display: inline-block;
+	}
+
+	md-input-container .md-input-message-animation, md-input-container .md-char-counter {
+		font-size: 11px;
+		line-height: 12px;
+		padding-top: 3px;
+	}
+
+	.selectdemoSelectHeader .demo-select-header {
+		position: fixed;
+		width: 88%;
+		background-color: #FFF;
+		z-index: 1000;
+		height: 30px;
+	}
+	.md-button {
+		min-width: 0px;
+		top: -16px;
+		margin: 0;
+	}
+
+	.md-toast-content .md-button	{
+		top: 7px;
+	}
+	
+
+	.md-toolbar-tools {
+		padding:0;
+		font-size: 	85%;
+	}
+
+	.menu-bar{
+		top: 6px;
+		position: relative;
+	}
+
+	.toolbar{							
+		position: relative;
+		z-index: 2;
+		width: 100%;
+	}
+
+md-tabs-content-wrapper {
+    position: absolute;
+}
+
+md-tabs:not(.md-no-tab-content):not(.md-dynamic-height) {
+    min-height: 90%;
+}
+md-tabs {
+    height: 80%;
+}
