@@ -133,12 +133,14 @@ function generate (dir, obj, expression){
 }
 
 
-var deleteFolderRecursive = function(path) {	
+var deleteFolderRecursive = function(path) {
+	console.log(path);
+
   if( fs.existsSync(path)) {
     fs.readdirSync(path).forEach(function(file,index){
       var curPath = path + "/" + file;      
       var x = moment().format(config.temp.name);
-      if(fs.lstatSync(curPath).isDirectory() && file !== x && file.indexOf('t3p') >= 0) { // recurse
+      if(fs.lstatSync(curPath).isDirectory() && file !== x) { // recurse
         	deleteFolderRecursive(curPath);
         	fs.rmdirSync(curPath);
       } else if(!fs.lstatSync(curPath).isDirectory() && path !== config.file.path){ // delete file
