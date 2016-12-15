@@ -35,7 +35,7 @@ var patternPart1 = types.join('|')
 dates.forEach((date, index) => {
   dates[index] = patternPart1.replace(rg, date);  
 });
-var pattern = dates.join('|');
+var patternFiles = dates.join('|');
 
 
 async.eachSeries(servers, function (server, callback) {  
@@ -52,7 +52,7 @@ async.eachSeries(servers, function (server, callback) {
   fs.readdir(dir, function (err, files) {
     var filtredFiles = [];
     files.forEach(file => {
-      if((new RegExp(pattern)).test(file)){
+      if((new RegExp(patternFiles)).test(file)){
         filtredFiles.push(file);
       }
     });

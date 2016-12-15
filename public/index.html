@@ -44,8 +44,8 @@
 <body layout="row">
 	<div ng-controller="AppCtrl" layout="column" flex ng-cloak>						
 		<md-content class="toolbar md-toolbar-tools" md-theme="docs-dark">
-			<form name="form" ng-submit="form.$valid && submit()" novalidate>					
-				<div layout="column" layout-align="top left">
+			<form name="form" ng-submit="form.$valid && (formData.expressions.length > 0) && submit()" novalidate>					
+				<div layout="row">
 					<div class="menu-bar">																		
 						<md-button ng-click="selectedFiles = []">
 							<md-icon class="material-icons">
@@ -53,8 +53,8 @@
 							</md-icon>									
 						</md-button>
 						<md-input-container class="select">
-							<label>Arquivos</label>
-							<md-select ng-model="formData.selectedFiles"
+								<label>Arquivos</label>
+								<md-select ng-model="formData.selectedFiles"
 								data-md-container-class="selectdemoSelectHeader"
 								multiple
 								md-no-asterisk
@@ -74,14 +74,14 @@
 								<div ng-message="required">Selecione ao menos 1 arquivo</div>
 							</div>
 						</md-input-container>
-						<md-input-container>
+						<!-- <md-input-container>
 							<label>Expressão</label>
 							<input ng-enter="submit()" required name="expression" ng-model="formData.expression" md-no-asterisk>
 							<div ng-messages="form.expression.$error">
 								<div ng-message="required">Obrigatório.</div>
 							</div>
-						</md-input-container>
-						<md-button type="submit" id="submit" value="Submit">
+						</md-input-container> -->
+						<md-button ng-show="false" type="submit" id="submit" value="Submit">
 							<md-tooltip md-direction="right">
 								Pesquisar
 							</md-tooltip>
@@ -89,7 +89,7 @@
 								search
 							</md-icon>									
 						</md-button>
-						<md-button>
+						<!-- <md-button>
 							<md-tooltip md-direction="right">
 								Baixar
 							</md-tooltip>
@@ -104,49 +104,73 @@
 							<md-icon class="material-icons">
 								create_new_folder
 							</md-icon>
-						</md-button>
+						</md-button> -->
 						<md-switch flex="20" ng-model="data.cb2" aria-label="Switch 2" ng-true-value="'ASCW'" ng-false-value="''" class="md-warn">{{ data.cb2 }}  
 						</md-switch>
 					</div>
+					<div flex>						
+						<md-chips
+							ng-model="formData.expressions"
+							readonly="false"
+							md-removable="transformChip($chip)"
+							placeholder="Enter a tag"
+							delete-button-label="Remove Tag"
+							delete-hint="Press delete to remove tag"
+							secondary-placeholder="+Tag"
+							md-transform-chip="transformChip($chip)"
+							required>
+						</md-chips>					
+						<div class="custom-error" ng-messages="validate">
+							<div ng-message="expressions">Informe ao menos 1 expressão</div>
+						</div>					
+					<span>
 				</div>
-			</form>								
-		</md-content>
-		<md-progress-linear ng-if="promise && promise.$$state.status == 0" md-mode="query"></md-progress-linear>		
-		<md-tabs class="md-accent" md-selected="selectedIndex" md-align-tabs="{{data.bottom ? 'bottom' : 'top'}}">
-	      <md-tab ng-repeat="tab in tabs"
-	              label="{{tab.title}}">
-	        <div class="demo-tab tab{{$index%4}}" md-scroll-y layout="column" flex >
-	          <div ng-bind-html="tab.content"></div>
-	          <br/>
-	          <md-button class="md-primary md-raised" ng-click="removeTab( tab )" ng-disabled="tabs.length <= 1">Remove Tab</md-button>
-	        </div>
-	      </md-tab>
+			</div>
+		</form>								
+	</md-content>
 
-	      <!-- <md-tab id="tab1">
-	        <md-tab-label>APP</md-tab-label>
-	        <md-tab-body md-scroll-y layout="column" flex>
-	          a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>
-	          </md-content>
-	      </md-tab>
-	      <md-tab id="tab2">
-	        	<md-tab-label>
-	        		<i class="material-icons">close</i>
-	        	</md-tab-label>
-	      </md-tab>
-	      <md-tab id="tab3">
-	        <md-tab-label>ASCW</md-tab-label>
-	          <md-tab-body md-scroll-y layout="column" flex>
-	          a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>
-	        </md-tab-body>
-	      </md-tab> -->
-	    </md-tabs>						
-		<md-content md-scroll-y layout="column" flex>
-
-		<!-- a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/> -->
-		<!-- <pre id="list2" class="col-md-12" ng-bind-html="extractedHTML" ng-if="extracted" resize></pre> -->
-
-		</md-content>
-	</div>
+	<md-progress-linear ng-if="promise && promise.$$state.status == 0" md-mode="query"></md-progress-linear>
+	<!-- <md-content>
+		<div flex layout="row">
+				<md-button>
+							<md-tooltip md-direction="right">
+								Baixar
+							</md-tooltip>
+							<md-icon class="material-icons">
+								file_download
+							</md-icon>									
+						</md-button>
+			<div flex>				
+				<md-chips
+					ng-model="highlights"
+					readonly="false"
+					md-removable="transformHighlights($chip)"
+					placeholder="+ highlights"
+					delete-button-label="Remove Tag"
+					delete-hint="Press delete to remove tag"
+					secondary-placeholder="+Tag"
+					md-transform-chip="transformChip($chip)"
+					required>
+				</md-chips>					
+				<div class="custom-error" ng-messages="validate">
+					<div ng-message="expressions">Informe ao menos 1 expressão</div>
+				</div>			
+			</div>
+		</div>
+	</md-content>		 -->
+	<md-tabs ng-if="tabs.length > 0" class="md-accent" md-selected="selectedIndex" md-align-tabs="{{data.bottom ? 'bottom' : 'top'}}">
+		<md-tab ng-repeat="tab in tabs"	label="">
+			<md-tab-label>{{tab.title}} <md-icon class="material-icons">
+								close
+							</md-icon></md-tab-label>			
+	        <md-tab-body md-scroll-y layout="column" class="demo-tab tab{{$index%4}}" md-scroll-y layout="column" flex >
+	          <div class="tab-content" ng-bind="tab.content"></div>
+				<md-button class="md-primary md-raised" ng-click="removeTab( tab )" ng-disabled="tabs.length <= 1">Remove Tab</md-button>
+				</div>
+	        </md-tab-body>		
+		</md-tab>
+	</md-tabs>
+</div>
 </body>
 	<!-- <div class="col-md-12 col-sm-12" id="filter">
 		<div class="panel panel-default">

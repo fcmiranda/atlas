@@ -7,6 +7,7 @@ var unzipSync = require('unzip-sync');
 var Fiber = require('fibers');
 var moment = require('moment');
 var config = require('./config.json'); 
+var async = require('async');
 
 module.exports.extractInterval = extractInterval;
 module.exports.extractFiles = extractFiles;
@@ -70,7 +71,18 @@ function extractFiles (files, expression, res){
 	deleteFolderRecursive(config.file.path);	
 }
 
-function exec (files, expression, res) {
+function exists (regex, text) {
+   regex = regex.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+   return new RegExp(regex).test(text);
+};
+
+function exec (files, expressions, res) {
+	var pattern = expressions.join('|');
+	var expressions = _.zipObject(expressions);
+	for (var expression in expressions) {
+        expressions[expression] = '';        
+    }
+
 	var dir = config.file.path;
 	if (!fs.existsSync(dir)){
     	fs.mkdirSync(dir);
@@ -78,25 +90,61 @@ function exec (files, expression, res) {
 
 	Fiber(function() {
 		var temp = '/' + moment().format(config.temp.name) + '/';
-		var obj = {
-			lines : []
-		};
-		for (var i = 0; i < files.length; i++){
-			var unzipSync = require('unzip-sync');
-	    	var dir = config.file.path+temp+files[i].replace(/\.[^/.]+$/, "");			
-			
-	    	if(!fs.existsSync(dir)){
-		    	var unzipSync = new unzipSync.UnzipSync({folderPath: dir});		    	
-		    	unzipSync.extract(path.join(config.zip.path,files[i]));
-		    	l("Files extracted on path: "+dir);
-		    }		    
-		    generate(dir, obj, expression);			
-	    };		
-		obj.lines = obj.lines.sort();
+		var dirs =[];
 
-		//send to client
-		res.json({extracted: obj.lines.join('\n')});
+		files.forEach((file) => {
+		  	var unzipSync = require('unzip-sync');
+	    	var dir = config.file.path+temp+file.replace(/\.[^/.]+$/, "");			
+			if(!fs.existsSync(dir)){
+		    	var unzipSync = new unzipSync.UnzipSync({folderPath: dir});		    	
+		    	unzipSync.extract(path.join(config.zip.path,file));
+		    	l("Files extracted on path: "+dir);		    	
+		    }
+		    dirs.push(dir);
+		});
+
+		async.eachSeries(dirs, function (dir, callback) {  
+		  console.log('Reading directory ',dir);
+		  fs.readdir(dir, function (err, files) {
+
+		    var startTimeFileReading = new Date().getTime();
+		    async.eachSeries(files, function (file, callback) {
+		 
+		        var lineReader = require('readline').createInterface({
+		          input: require('fs').createReadStream(dir+'/'+file).pipe(iconv.decodeStream('win1252'))          
+		        });
+
+		        lineReader.on('line', function (line) {          
+		            var result = line.match(pattern);
+		            if(result)   
+		            	expressions[result[0]] += (!exists(line,expressions[result[0]])) ? (line+("\n")) : "";
+		        });
+
+		        lineReader.on('close', function(){         
+		          callback();
+		        });      
+		     
+		    }, function () {		      	      
+		      logTime('File', startTimeFileReading);
+		      callback();    
+		    });
+		  });
+		}, function(){
+			var extracted = []
+			for(var expression in expressions){
+		    	extracted.push({
+		    		title: expression,
+		    		content : expressions[expression].split('\n').sort().join('\n')
+		    	});
+		    	delete expressions[expression];
+		    };
+			res.json({extracted: extracted});
+		});		
 	}).run();
+}
+
+function logTime(string, start){
+    console.log(string + ' executed in ' + (new Date().getTime() - start)/1000 + ' seconds');
 }
 
 function generate (dir, obj, expression){

@@ -35,7 +35,7 @@ app.post('/extractInterval', function (req, res) {
 app.post('/extractFiles', function (req, res) {
 	var body = req.body;
 	setTimeout(function(){
-		log.extractFiles(body.files, body.expression, res);
+		log.extractFiles(body.files, body.expressions, res);
 	},2000)
 	
 });

@@ -6,10 +6,24 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 .controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $localStorage, $http, $element, $mdToast) {
     $scope.count = 0;	
 	$scope.formData = {
-		expression: 'teste',
+		expression: 'F12345|F11111',
+		expressions: ['F4404357'],
 		start: moment(0, "HH"),
-		end: moment()		
+		end: moment(),		
 	};
+	$scope.highlights = [];
+	$scope.validate = {
+		'expressions': false
+	}
+
+	$scope.transformChip = function (){
+		$scope.validate.expressions = ($scope.formData.expressions.length == 0);
+	}
+
+	$scope.transformHighlights = function (){
+		$scope.validate.expressions = ($scope.formData.expressions.length == 0);
+	}
+
 	$scope.localStorage = $localStorage;
 	$scope.localStorage.mode = $scope.localStorage.mode || "date";
 	$scope.files = [];
@@ -59,14 +73,12 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 
 	$scope.exportByFiles = function () {
 		$scope.promise = $http.post('/extractFiles', {
-			expressions: $scope.formData.expression,
+			expressions: $scope.formData.expressions,
 			files: $scope.formData.selectedFiles
 		}).then(
 			function (response) {
-				$scope.extracted = response.data.extracted;
-				$scope.extractedHTML = asHTML(response.data.extracted);
-				$scope.alerts = [];		
-			
+				$scope.tabs = response.data.extracted;	
+				$scope.toast('Sucesso!','success');
 			}, function (response) {
 				$scope.toast(response.data.message,'error');
 			}
@@ -130,12 +142,10 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 	  };
 
 	
-	var tabs = [
-          { title: 'One', content: "a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>a<br/>"},
-          { title: 'Two', content: "You can swipe left and right on a mobile device to change tabs."}],
+	var tabs = [],	
         selected = null,
         previous = null;
-    $scope.tabs = tabs;
+    $scope.tabs = [];
     $scope.selectedIndex = 0;
     $scope.$watch('selectedIndex', function(current, old){
       previous = selected;
