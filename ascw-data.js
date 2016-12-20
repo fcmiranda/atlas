@@ -4,11 +4,10 @@ var async = require('async');
 var _ = require ('lodash');
 
 const servers = [47,52,10,48,11,49,53,12,16,15];
-var arrDates = ['20161216','20161215','20161214','20161213','20161212','20161211','20161210','20161209','20161208','20161207','20161206','20161205','20161204','20161203','20161202','20161201'];
+var arrDates = ['20161218','20161217','20161216','20161215','20161214','20161213','20161212','20161211','20161210','20161209','20161208','20161207','20161206','20161205'];
 var types = ['ASCW'];
 var rg = new RegExp('%DATE%', 'g');
 var startTimeReport = new Date().getTime();
-
 
 var translate = {
     "!NEW REQUEST": "Requisições:",
@@ -54,6 +53,7 @@ arrDates.forEach(date => {
 function report(date, patternFiles){    
     var reportList = [];
     var logins = new Set();
+    var loginsLogout = [];
 
     async.eachSeries(servers, function (server, callback) {  
     var dir = '//172.26.87.'+server+'/Avaya/IC73/logs';
@@ -67,7 +67,7 @@ function report(date, patternFiles){
     fs.readdir(dir, function (err, files) {
       var filtredFiles = [];
       files.forEach(file => {
-        if((new RegExp(patternFiles)).test(file)){
+        if((new RegExp(patternFiles)).test(file) && file.indexOf('crash') < 0){
           filtredFiles.push(file);          
         }
       });
@@ -81,12 +81,16 @@ function report(date, patternFiles){
 
           lineReader.on('line', function (line) {          
               var result = line.match(patternList); //return a array contain the result of match
-                result = result || ''; //handle null result            
-                report.expressions[result[0]]++; //increment the expression count
-                if(result[0] == '!params=action=login&login=') logins.add(line.substring(result[0].length, result[0].length+8));                                              
-  /*            var registration = line.substring(result.length, result.length+8);              
-                logins += (patternRegistration.test(registration) && (new RegExp(registration).test(logins))) ? registration+'-' : '';*/                             
-                    
+              result = result || ''; //handle null result            
+              report.expressions[result[0]]++; //increment the expression count
+              if(result[0] == '!params=action=login&login=') 
+                logins.add(line.substring(result[0].length, result[0].length+8));
+              else if(result[0] == 'deslogado por TIMEOUT!' && (line.indexOf('Alarm') < 0)){
+                var login = line.match(/[a-z]\d{7}/) 
+                if(login){
+                  loginsLogout.push(login[0]);
+                }
+              }
           });
 
           lineReader.on('close', function(){          
@@ -101,17 +105,28 @@ function report(date, patternFiles){
     });
   }, function(){
     var total = {};  
+    
     for(var key in expressions()){
       total[translate[key]] = _.sumBy(reportList, function(item) {
         return item.expressions[key]; 
       });
     }
-    total['Logins únicos'] = logins.size;
-    reportList.push(total);
-    console.log(reportList);
+    total['Logins únicos'] = logins.size;     
+    
+    var totalTimeout = 0;
+    var obj = _.groupBy(loginsLogout);
+    for(var key in obj){
+      obj[key] = obj[key].length;
+      totalTimeout += obj[key];
+    }    
+    total['Agentes deslogados:'] = obj;
+    total['Total Agentes deslogados:'] = totalTimeout;
+    reportList.push(total);    
 
     var file = "//logsusabilidade/logs/Usabilidade/extracaoascw/report-"+date+".txt";
+    //var file = "./report-"+date+".txt";
     console.log("!!Saving the file "+file+" ....");
+    console.log(reportList);
     fs.writeFile(file, JSON.stringify(reportList, null, 4), function(err) {
         if(err) {
             return console.log(err);
@@ -119,10 +134,7 @@ function report(date, patternFiles){
     }); 
     logTime('Report', startTimeReport);
   });
-
 }
-
-
 
 function logTime(string, start){
     console.log(string + ' executed in ' + (new Date().getTime() - start)/1000 + ' seconds');
