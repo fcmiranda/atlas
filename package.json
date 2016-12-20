@@ -4,7 +4,8 @@
   "description": "ferramenta para gerar log personalizado",
   "main": "app.js",
   "scripts": {
-    "start": "node --max-old-space-size=4096",
+    "devstart": "nodemon --max-old-space-size=4096",
+    "start": "node --max-old-space-size=4096 app.js",
     "install-windows-service": "winser -i",
     "uninstall-windows-service": "winser -r"
   },
