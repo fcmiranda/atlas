@@ -169,11 +169,6 @@
 		top: -16px;
 	}
 
-	.md-toast-content .md-button	{
-		top: 7px;
-	}
-	
-
 	.md-toolbar-tools {
 		padding:0;
 		font-size: 	85%;
@@ -192,7 +187,8 @@
 
 md-tabs-content-wrapper {
     position: absolute;
-    top: 92px;
+    top: 124px;
+    font-size: 13px;    
 }
 
 md-tabs:not(.md-no-tab-content):not(.md-dynamic-height) {
@@ -208,6 +204,17 @@ form {
 
 md-tabs-canvas {
     height: 26px;
+}
+
+.helpbar {
+	height: 32px;
+}
+
+md-tab-item md-icon {
+	outline: none;
+    border: none;
+    width: 17px;
+    min-width: 17px;
 }
 
 .md-chips {
@@ -262,7 +269,7 @@ md-tabs-canvas {
 .md-tab {
     font-size: 14px;
     line-height: 24px;
-    padding: 0px 12px;
+    padding: 0px 4px;
 }
 
 .tab-content {
@@ -309,3 +316,33 @@ md-tabs-canvas {
 
 .chipsdemoBasicUsage .custom-chips md-chips-wrap.md-removable md-chip md-chip-template {
   padding-right: 5px; }
+
+
+.ç0 {background-color:#FF0000}
+.ç1 {background-color:#FFFF00}
+.ç2 {background-color:#00EAFF}
+.ç3 {background-color:#AA00FF}
+.ç4 {background-color:#FF7F00}
+.ç5 {background-color:#BFFF00}
+.ç6 {background-color:#0095FF}
+.ç7 {background-color:#FF00AA}
+.ç8 {background-color:#FFD400}
+.ç9 {background-color:#6AFF00}
+.ç10 {background-color:#0040FF}
+.ç11 {background-color:#EDB9B9}
+.ç12 {background-color:#B9D7ED}
+.ç13 {background-color:#E7E9B9}
+.ç14 {background-color:#DCB9ED}
+.ç15 {background-color:#B9EDE0}
+.ç16 {background-color:#8F2323}
+.ç17 {background-color:#23628F}
+.ç18 {background-color:#8F6A23}
+.ç19 {background-color:#6B238F}
+.ç20 {background-color:#4F8F23}
+.ç21 {background-color:#000000}
+.ç22 {background-color:#737373}
+.ç23 {background-color:#CCCCCC}
+
+md-tabs.md-default-theme.md-accent > md-tabs-wrapper, md-tabs.md-accent > md-tabs-wrapper {
+    background-color: rgb(255,138,101);
+}

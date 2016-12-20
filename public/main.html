@@ -1,0 +1,123 @@
+<div ng-controller="AppCtrl" layout="column" flex ng-cloak>						
+	<md-content class="toolbar md-toolbar-tools" md-theme="docs-dark">
+		<form name="form" ng-submit="form.$valid && (formData.expressions.length > 0) && submit()" novalidate>					
+			<div layout="row">
+				<div class="menu-bar">																		
+					<md-button ng-click="selectedFiles = []">
+						<md-icon class="material-icons">
+							indeterminate_check_box
+						</md-icon>									
+					</md-button>
+					<md-input-container class="select">
+						<label>Arquivos</label>
+						<md-select ng-model="formData.selectedFiles"
+						data-md-container-class="selectdemoSelectHeader"
+						multiple
+						md-no-asterisk
+						required
+						name="selectedFiles">										
+						<md-select-header class="demo-select-header">
+							<input ng-model="searchTerm"
+							type="search"
+							placeholder="Pesquisar arquivo..."
+							class="demo-header-searchbox md-text"/>
+						</md-select-header>
+						<md-optgroup label="files">
+							<md-option ng-value="file" opt="{{$index}}" ng-repeat="file in files | orderBy:'-'  | filter:searchTerm">{{file}}</md-option>
+						</md-optgroup>
+					</md-select>
+					<div class="errors" ng-messages="form.selectedFiles.$error">
+						<div ng-message="required">Selecione ao menos 1 arquivo</div>
+					</div>
+				</md-input-container>
+						<!-- <md-input-container>
+							<label>Expressão</label>
+							<input ng-enter="submit()" required name="expression" ng-model="formData.expression" md-no-asterisk>
+							<div ng-messages="form.expression.$error">
+								<div ng-message="required">Obrigatório.</div>
+							</div>
+						</md-input-container> -->
+						<md-button ng-show="false" type="submit" id="submit" value="Submit">
+							<md-tooltip md-direction="right">
+								Pesquisar
+							</md-tooltip>
+							<md-icon class="material-icons">
+								search
+							</md-icon>									
+						</md-button>						
+						<md-button>
+							<md-tooltip md-direction="right">
+								Novo log
+							</md-tooltip>
+							<md-icon class="material-icons">
+								create_new_folder
+							</md-icon>
+						</md-button>
+						<md-switch flex="20" ng-model="data.cb2" aria-label="Switch 2" ng-true-value="'ASCW'" ng-false-value="''" class="md-warn"><!-- {{ data.cb2 }} -->  
+						</md-switch>
+					</div>
+					<div flex>						
+						<md-chips
+						ng-model="formData.expressions"
+						readonly="false"
+						md-removable="true"
+						placeholder="Enter a tag"
+						delete-button-label="Remove Tag"
+						delete-hint="Press delete to remove tag"
+						secondary-placeholder="+Tag"
+						md-on-remove="removeExpression($chip,$index)"
+						required>
+					</md-chips>					
+					<div class="custom-error" ng-messages="validate">
+						<div ng-message="expressions">Informe ao menos 1 expressão</div>
+					</div>					
+					<span>
+					</div>
+				</div>
+			</form>								
+		</md-content>
+
+		<md-progress-linear ng-if="promise && promise.$$state.status == 0" md-mode="query"></md-progress-linear>
+		<md-content md-theme="docs-dark" ng-show="tabs.length > 0">
+			<div flex layout="row" class="helpbar">
+				<md-button>
+					<md-tooltip md-direction="right">
+						Baixar
+					</md-tooltip>
+					<md-icon class="material-icons">
+						file_download
+					</md-icon>									
+				</md-button>
+				<div flex>				
+					<md-chips
+					ng-model="tabs[selectedTabIndex].highlights"
+					readonly="false"
+					md-removable="true"
+					placeholder="+ highlights"
+					delete-button-label="Remove Tag"
+					delete-hint="Press delete to remove tag"
+					secondary-placeholder="+Tag"
+					md-on-add="addHighlights($chip,$index)"
+					md-on-remove="removeHighlights($chip,$index)"
+					md-on-select="selectHighlights($chip)"
+					required>
+				</md-chips>			
+			</div>
+		</div>
+	</md-content>		
+	<md-tabs ng-show="tabs.length > 0" class="md-accent" md-selected="selectedTabIndex" md-align-tabs="{{data.bottom ? 'bottom' : 'top'}}">
+		<md-tab ng-repeat="tab in tabs">
+			<md-tab-label>
+				{{tab.title}}
+				<md-icon class="material-icons" ng-click="openInNew(tab)">
+					open_in_new
+				</md-icon><md-icon class="material-icons" ng-click="removeTab(tab)">
+					close
+				</md-icon>
+			</md-tab-label>			
+			<md-tab-body md-scroll-y layout="column" class="demo-tab tab{{$index%4}}" md-scroll-y layout="column" flex >
+				<div class="tab-content" ng-bind-html="tab.content"></div>				
+			</md-tab-body>		
+		</md-tab>
+	</md-tabs>
+</div>
