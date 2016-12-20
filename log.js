@@ -134,7 +134,9 @@ function exec (files, expressions, res) {
 			for(var expression in expressions){
 		    	extracted.push({
 		    		title: expression,
-		    		content : expressions[expression].split('\n').sort().join('\n')
+		    		content : expressions[expression].split('\n').sort().join('\n'),
+		    		highlights: [],
+		    		chighlights: []
 		    	});
 		    	delete expressions[expression];
 		    };

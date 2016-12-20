@@ -1,45 +1,24 @@
-var app = angular.module('app', ['ui.bootstrap', 'checklist-model', 'ngStorage', 'ngSanitize', 'ngMaterial', 'ngMessages', 'cgBusy']);
+var app = angular.module('app', ['ui.bootstrap', 'checklist-model', 'ngStorage', 'ngSanitize', 'ngMaterial', 'ngMessages', 'cgBusy','ui.router']);
 
 app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast) {
 
 })
-.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $localStorage, $http, $element, $mdToast) {
+.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $localStorage, $http, $element, $mdToast, $state) {
     $scope.count = 0;	
 	$scope.formData = {
 		expression: 'F12345|F11111',
 		expressions: ['F4404357'],
 		start: moment(0, "HH"),
 		end: moment(),		
-	};
-	$scope.highlights = [];
+	};	
 	$scope.validate = {
 		'expressions': false
 	}
-
-	$scope.transformChip = function (){
-		$scope.validate.expressions = ($scope.formData.expressions.length == 0);
-	}
-
-	$scope.transformHighlights = function (){
-		$scope.validate.expressions = ($scope.formData.expressions.length == 0);
-	}
-
 	$scope.localStorage = $localStorage;
 	$scope.localStorage.mode = $scope.localStorage.mode || "date";
 	$scope.files = [];
 	$scope.clicked = false;
 	$scope.searchTerm = '';
-	$scope.data = {
-      selectedIndex: 0,
-      secondLabel:   "Item Two",
-      bottom:        false
-    };
-    $scope.next = function() {
-      $scope.data.selectedIndex = Math.min($scope.data.selectedIndex + 1, 2) ;
-    };
-    $scope.previous = function() {
-      $scope.data.selectedIndex = Math.max($scope.data.selectedIndex - 1, 0);
-    };
 
 	$http.get('/files').then(
 		function (response) {					
@@ -77,7 +56,7 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 			files: $scope.formData.selectedFiles
 		}).then(
 			function (response) {
-				$scope.tabs = response.data.extracted;	
+				$scope.tabs = $scope.tabs.concat(response.data.extracted);	
 				$scope.toast('Sucesso!','success');
 			}, function (response) {
 				$scope.toast(response.data.message,'error');
@@ -130,62 +109,135 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 
 	$scope.toast = function(text, type) {
 	    $mdToast.show({
-          hideDelay   : 3000,
-          position    : 'bottom left',
-          controller  : 'ToastCtrl',
-          templateUrl : 'app/toast/toast.html',
-          toast: {
-          	text: text,
-          	type: type
-          } 
-        });
-	  };
-
-	
-	var tabs = [],	
-        selected = null,
-        previous = null;
-    $scope.tabs = [];
-    $scope.selectedIndex = 0;
-    $scope.$watch('selectedIndex', function(current, old){
-      previous = selected;
-      selected = tabs[current];
+	      hideDelay   : 3000,
+	      position    : 'bottom left',
+	      controller  : 'ToastCtrl',
+	      templateUrl : 'app/toast/toast.html',
+	      toast: {
+	      	text: text,
+	      	type: type
+	      } 
+	    });
+	};
+   
+    var previous = null;
+    $scope.selected = null;
+    $scope.tabs = $localStorage.tabs || [];
+    delete $localStorage.tabs;
+    $scope.selectedTabIndex = 0;
+    $scope.$watch('selectedTabIndex', function(current, old){
+      previous = $scope.selected;
+      $scope.selected = $scope.tabs[current];
       if ( old + 1 && (old != current)) console.log('Goodbye ' + previous.title + '!');
-      if ( current + 1 )                console.log('Hello ' + selected.title + '!');
+      if ($scope.selected && (current + 1) ) console.log('Hello ' + $scope.selected.title + '!');
     });
+    
     $scope.addTab = function (title, view) {
       view = view || title + " Content View";
       tabs.push({ title: title, content: view, disabled: false});
     };
+
     $scope.removeTab = function (tab) {
-      var index = tabs.indexOf(tab);
-      tabs.splice(index, 1);
+      var index = $scope.tabs.indexOf(tab);
+      $scope.tabs.splice(index, 1);
     };
+
+    $scope.openInNew = function (tab){
+		$localStorage.tabs = [tab];
+		$timeout(function(){
+			var url = $state.href('home');
+			window.open(url,'_blank');
+			$scope.removeTab(tab);	
+		},500);				
+	}
+
+    $scope.removeExpression = function (){
+		$scope.validate.expressions = ($scope.formData.expressions.length == 0);
+	}
+
+	var hasInArray = function (array, expression){
+		var value = false;
+
+		array.forEach((item) => {
+			if(new RegExp(item).test(expression)){
+				value = true;
+				return;
+			}
+		});
+
+		return value;
+	}
+
+	$scope.addHighlights = function (search, index){
+
+		if(new RegExp(search).test('<span class="ç"><i><\/i><\/span>')){
+			var highlights = $scope.tabs[$scope.selectedTabIndex].highlights
+			highlights.splice(highlights.indexOf(search), 1);
+			return;
+		}
+
+		var content = $scope.tabs[$scope.selectedTabIndex].content;
+		var highlights = angular.copy($scope.tabs[$scope.selectedTabIndex].highlights);
+		var chighlights = $scope.tabs[$scope.selectedTabIndex].chighlights;
+		if(chighlights.indexOf() < 0){
+			chighlights.push(search);
+		}else{
+			chighlights[chighlights.indexOf()] = search;
+		}
+		var index = chighlights.indexOf(search)
+				
+		if(search && content){
+			if((highlights.length == 1) || (!hasInArray(highlights, search))){
+				$scope.tabs[$scope.selectedTabIndex].content = content.replace(new RegExp(search, 'g'),'<span class="ç'+index+'">'+search+'<i id="'+index+'"></i></span>');
+				if(!$scope.tabs[$scope.selectedTabIndex].pureContent){
+					$scope.tabs[$scope.selectedTabIndex].pureContent = content;
+				}
+			}else{				
+				highlights = highlights.sort(function(a, b){
+				  return b.length - a.length;
+				});
+
+				var orig = $scope.tabs[$scope.selectedTabIndex].highlights;
+				content = $scope.tabs[$scope.selectedTabIndex].pureContent;
+
+				highlights.forEach((hl) => {
+					content = content.replace(new RegExp(hl, 'g'),'<span class="ç'+orig.indexOf(hl)+'">'+hl+'<i id="'+orig.indexOf(hl)+'"></i></span>');
+				});	
+
+				$scope.tabs[$scope.selectedTabIndex].content = content;
+			}					
+		}			
+	}
+
+	$scope.removeHighlights = function (search, index){
+		var content = $scope.tabs[$scope.selectedTabIndex].content;
+		var chighlights = $scope.tabs[$scope.selectedTabIndex].chighlights;
+
+		if(search && content){
+			$scope.tabs[$scope.selectedTabIndex].content = content.replace(new RegExp('<span class="ç'+chighlights.indexOf(search)+'">|'+'<i id="'+chighlights.indexOf(search)+'"></i></span>', 'g'), '');
+			chighlights[chighlights.indexOf(search)] = undefined;
+		}
+		/*$scope.tabs[$scope.selectedTabIndex].content = content.replace(new RegExp('<span(.*?'+search+')<\/span>', 'g'), search);*/
+			
+	}
+
+	$scope.selectHighlights = function (search){
+		console.log(search);			
+	}	
 
  })
-.config(function($mdThemingProvider) {
-// Configure a dark theme with primary foreground yellow
-$mdThemingProvider.theme('docs-dark', 'default')
-  .primaryPalette('yellow')
-  .dark();
 
-})
-.directive('ngEnter', function () {
-    return function (scope, elements, attrs) {
-        elements.bind('keydown keypress', function (event) {
-            if (event.which === 13) {
-                scope.$apply(function () {
-                    scope.form.$setSubmitted();
-                });
-                event.preventDefault();
-            }
-        });
-    };
-})
-.value('cgBusyDefaults',{
-  backdrop: false,
-  templateUrl: 'app/loader/loader.html',
-  delay: 300,
-  minDuration: 700,
-  wrapperClass: 'my-class my-class2'
+.config(function($locationProvider,$stateProvider,$mdThemingProvider) {
+  
+  $mdThemingProvider.theme('docs-dark', 'default')
+  .primaryPalette('yellow')
+  .dark()
+
+  var home = {
+    name: 'home',
+    url: '/',
+    templateUrl: 'main.html'
+  };
+
+  $stateProvider.state(home);
 });

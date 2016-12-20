@@ -169,11 +169,6 @@
 		top: -16px;
 	}
 
-	.md-toast-content .md-button	{
-		top: 7px;
-	}
-	
-
 	.md-toolbar-tools {
 		padding:0;
 		font-size: 	85%;
@@ -192,7 +187,8 @@
 
 md-tabs-content-wrapper {
     position: absolute;
-    top: 92px;
+    top: 124px;
+    font-size: 13px;    
 }
 
 md-tabs:not(.md-no-tab-content):not(.md-dynamic-height) {
@@ -210,6 +206,13 @@ md-tabs-canvas {
     height: 26px;
 }
 
+md-tab-item md-icon {
+	outline: none;
+    border: none;
+    width: 17px;
+    min-width: 17px;
+}
+
 .md-chips {
     display: block;
     font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -220,14 +223,22 @@ md-tabs-canvas {
 
 .md-chips md-chip {
     border-radius: 5px;
-    height: 22px;
-    line-height: 22px;
-    margin: 3px 4px 0 0;
+    height: 19px;
+    line-height: 17px;
+    margin: 0px 4px 0 0;
     padding: 0 12px 0 12px;
+}
+
+.md-chips .md-chip-input-container input:not([type]), .md-chips .md-chip-input-container input[type="email"], .md-chips .md-chip-input-container input[type="number"], .md-chips .md-chip-input-container input[type="tel"], .md-chips .md-chip-input-container input[type="url"], .md-chips .md-chip-input-container input[type="text"] {
+    border: 0;
+    height: 20px;
+    line-height: 20px;
+    padding: 0;
 }
 
 .md-chips md-chip .md-chip-remove{
 	width: 0;
+	height: 0;
 }
 
 .toolbar .md-chips{
@@ -235,21 +246,30 @@ md-tabs-canvas {
 }
 
 .md-chips md-chip .md-chip-remove md-icon {
-    top: 0%;
-    left: -23px;
-    transform: translate3d(-41%, -50%, 0);
-    transform: scale(0.8);
+    top: -3px;
+    left: -18px;
+    font-size: 15px;
+    height: 10px;
+    width: 10px;
+    min-width: 0;
+    max-width: 0;
 }
 
 .md-chips .md-chip-input-container:not(:first-child) {
     margin: 0px 8px 0 0;
-    height: 28px;
-    line-height: 28px;
+    height: 24px;
+    line-height: 20px;
 }
 
 .md-chips .md-chip-input-container {
     margin: 0px 8px 0 0;
-    height: 28px;
+    height: 24px;
+    line-height: 20px;
+}
+
+.md-chips .md-chip-input-container {
+    margin: 0px 8px 0 0;
+    height: 20px;
 }
 
 .custom-error{
@@ -262,7 +282,7 @@ md-tabs-canvas {
 .md-tab {
     font-size: 14px;
     line-height: 24px;
-    padding: 0px 12px;
+    padding: 0px 4px;
 }
 
 .tab-content {
@@ -309,3 +329,33 @@ md-tabs-canvas {
 
 .chipsdemoBasicUsage .custom-chips md-chips-wrap.md-removable md-chip md-chip-template {
   padding-right: 5px; }
+
+
+.ç0 {background-color:#FF0000}
+.ç1 {background-color:#FFFF00}
+.ç2 {background-color:#00EAFF}
+.ç3 {background-color:#AA00FF}
+.ç4 {background-color:#FF7F00}
+.ç5 {background-color:#BFFF00}
+.ç6 {background-color:#0095FF}
+.ç7 {background-color:#FF00AA}
+.ç8 {background-color:#FFD400}
+.ç9 {background-color:#6AFF00}
+.ç10 {background-color:#0040FF}
+.ç11 {background-color:#EDB9B9}
+.ç12 {background-color:#B9D7ED}
+.ç13 {background-color:#E7E9B9}
+.ç14 {background-color:#DCB9ED}
+.ç15 {background-color:#B9EDE0}
+.ç16 {background-color:#8F2323}
+.ç17 {background-color:#23628F}
+.ç18 {background-color:#8F6A23}
+.ç19 {background-color:#6B238F}
+.ç20 {background-color:#4F8F23}
+.ç21 {background-color:#000000}
+.ç22 {background-color:#737373}
+.ç23 {background-color:#CCCCCC}
+
+md-tabs.md-default-theme.md-accent > md-tabs-wrapper, md-tabs.md-accent > md-tabs-wrapper {
+    background-color: rgb(255,138,101);
+}
