@@ -21,7 +21,7 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 	$scope.clicked = false;
 	$scope.searchTerm = '';
 
-	$http.get('/files').then(
+	$http.get('api/files').then(
 		function (response) {					
 			$scope.files = response.data;
 			$scope.formData.selectedFiles = [];
@@ -52,7 +52,7 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 	};*/
 
 	$scope.exportByFiles = function () {
-		$scope.promise = $http.post('/extractFiles', {
+		$scope.promise = $http.post('api/extractFiles', {
 			expressions: $scope.formData.expressions,
 			files: $scope.formData.selectedFiles
 		}).then(
@@ -66,14 +66,14 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 	}
 
 	$scope.newZip = function () {		
-		$http.post('/zip', {
+		$http.post('api/zip', {
 		})
 		.then(
 			function (response) {					
 				$scope.extracted = response.data.extracted;
 				$scope.extractedHTML = response.data.extracted;
 
-				$http.get('/files').then(
+				$http.get('api/files').then(
 				function (response) {					
 					$scope.files = response.data;
 				}, function (response) {
