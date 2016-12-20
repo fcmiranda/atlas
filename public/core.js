@@ -1,5 +1,5 @@
 
-var app = angular.module('app', ['ui.bootstrap', 'checklist-model', 'ngStorage', 'ngSanitize', 'ngMaterial', 'ngMessages', 'cgBusy','ui.router']);
+var app = angular.module('app', ['checklist-model', 'ngStorage', 'ngSanitize', 'ngMaterial', 'ngMessages', 'cgBusy','ui.router']);
 
 app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast) {
 
@@ -217,6 +217,13 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 	}	
 
  })
+.config(function($locationProvider) {
+    $locationProvider
+        .html5Mode({
+            enabled: true, // set HTML5 mode
+            requireBase: false // I removed this to keep it simple, but you can set your own base url
+        });
+})
 .config(function($locationProvider,$stateProvider,$mdThemingProvider) {
   
   $mdThemingProvider.theme('docs-dark', 'default')
