@@ -206,10 +206,6 @@ md-tabs-canvas {
     height: 26px;
 }
 
-.helpbar {
-	height: 32px;
-}
-
 md-tab-item md-icon {
 	outline: none;
     border: none;
@@ -227,14 +223,22 @@ md-tab-item md-icon {
 
 .md-chips md-chip {
     border-radius: 5px;
-    height: 22px;
-    line-height: 22px;
-    margin: 3px 4px 0 0;
+    height: 19px;
+    line-height: 17px;
+    margin: 0px 4px 0 0;
     padding: 0 12px 0 12px;
+}
+
+.md-chips .md-chip-input-container input:not([type]), .md-chips .md-chip-input-container input[type="email"], .md-chips .md-chip-input-container input[type="number"], .md-chips .md-chip-input-container input[type="tel"], .md-chips .md-chip-input-container input[type="url"], .md-chips .md-chip-input-container input[type="text"] {
+    border: 0;
+    height: 20px;
+    line-height: 20px;
+    padding: 0;
 }
 
 .md-chips md-chip .md-chip-remove{
 	width: 0;
+	height: 0;
 }
 
 .toolbar .md-chips{
@@ -242,21 +246,30 @@ md-tab-item md-icon {
 }
 
 .md-chips md-chip .md-chip-remove md-icon {
-    top: 0%;
-    left: -23px;
-    transform: translate3d(-41%, -50%, 0);
-    transform: scale(0.8);
+    top: -3px;
+    left: -18px;
+    font-size: 15px;
+    height: 10px;
+    width: 10px;
+    min-width: 0;
+    max-width: 0;
 }
 
 .md-chips .md-chip-input-container:not(:first-child) {
     margin: 0px 8px 0 0;
-    height: 28px;
-    line-height: 28px;
+    height: 24px;
+    line-height: 20px;
 }
 
 .md-chips .md-chip-input-container {
     margin: 0px 8px 0 0;
-    height: 28px;
+    height: 24px;
+    line-height: 20px;
+}
+
+.md-chips .md-chip-input-container {
+    margin: 0px 8px 0 0;
+    height: 20px;
 }
 
 .custom-error{

@@ -84,7 +84,7 @@
 					<md-tooltip md-direction="right">
 						Baixar
 					</md-tooltip>
-					<md-icon class="material-icons">
+					<md-icon class="material-icons" export name="tabs[selectedTabIndex].title" text="tabs[selectedTabIndex].pureContent || tabs[selectedTabIndex].content">
 						file_download
 					</md-icon>									
 				</md-button>
@@ -92,7 +92,6 @@
 					<md-chips
 					ng-model="tabs[selectedTabIndex].highlights"
 					readonly="false"
-					md-removable="true"
 					placeholder="+ highlights"
 					delete-button-label="Remove Tag"
 					delete-hint="Press delete to remove tag"
