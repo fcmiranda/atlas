@@ -1,11 +1,13 @@
 
-var app = angular.module('app', ['checklist-model', 'ngStorage', 'ngSanitize', 'ngMaterial', 'ngMessages', 'cgBusy','ui.router']);
+var app = angular.module('app', ['ngStorage', 'ngSanitize', 'ngMaterial', 'ngMessages','ui.router']);
 
-app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast) {
+app.run(AppRun)
+function AppRun (){}
 
-})
-.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $localStorage, $http, $element, $mdToast, $state) {
-    $scope.count = 0;	
+app.controller('AppCtrl', AppController)
+AppController.$inject = ['$scope', '$timeout', '$mdSidenav', '$localStorage', '$http', '$element', '$mdToast', '$state'];
+function AppController ($scope, $timeout, $mdSidenav, $localStorage, $http, $element, $mdToast, $state) {
+	$scope.count = 0;	
 	$scope.formData = {
 		/*expression: 'F12345|F11111',*/
 		expressions: [],
@@ -26,7 +28,7 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 			$scope.files = response.data;
 			$scope.formData.selectedFiles = [];
 		}
-	);
+		);
 
 	/*$scope.exportByDate = function () {
 		$scope.alerts = [];
@@ -56,12 +58,12 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 			expressions: $scope.formData.expressions,
 			files: $scope.formData.selectedFiles
 		}).then(
-			function (response) {
-				$scope.tabs = $scope.tabs.concat(response.data.extracted);	
-				$scope.toast('Sucesso!','success');
-			}, function (response) {
-				$scope.toast(response.data.message,'error');
-			}
+		function (response) {
+			$scope.tabs = $scope.tabs.concat(response.data.extracted);	
+			$scope.toast('Sucesso!','success');
+		}, function (response) {
+			$scope.toast(response.data.message,'error');
+		}
 		);			
 	}
 
@@ -74,15 +76,15 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 				$scope.extractedHTML = response.data.extracted;
 
 				$http.get('api/files').then(
-				function (response) {					
-					$scope.files = response.data;
-				}, function (response) {
+					function (response) {					
+						$scope.files = response.data;
+					}, function (response) {
 
-				});
+					});
 			}, function (response) {
 				$scope.alerts = [{msg: response.data.message, type: 'danger'}];
 			}
-		);
+			);
 	}
 
 	$scope.clearSearchTerm = function() {
@@ -94,46 +96,46 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 	}
 
 	$element.find('input').on('keydown', function(ev) {
-	  ev.stopPropagation();
+		ev.stopPropagation();
 	});
 
 
 	$scope.toast = function(text, type) {
-	    $mdToast.show({
-	      hideDelay   : 3000,
-	      position    : 'bottom left',
-	      controller  : 'ToastCtrl',
-	      templateUrl : 'app/toast/toast.html',
-	      toast: {
-	      	text: text,
-	      	type: type
-	      } 
-	    });
+		$mdToast.show({
+			hideDelay   : 3000,
+			position    : 'bottom left',
+			controller  : 'ToastCtrl',
+			templateUrl : 'app/toast/toast.html',
+			toast: {
+				text: text,
+				type: type
+			} 
+		});
 	};
-   
-    var previous = null;
-    $scope.selected = null;
-    $scope.tabs = $localStorage.tabs || [];
-    delete $localStorage.tabs;
-    $scope.selectedTabIndex = 0;
-    $scope.$watch('selectedTabIndex', function(current, old){
-      previous = $scope.selected;
-      $scope.selected = $scope.tabs[current];
-      if ( old + 1 && (old != current)) console.log('Goodbye ' + previous.title + '!');
-      if ($scope.selected && (current + 1) ) console.log('Hello ' + $scope.selected.title + '!');
-    });
-    
-    $scope.addTab = function (title, view) {
-      view = view || title + " Content View";
-      tabs.push({ title: title, content: view, disabled: false});
-    };
 
-    $scope.removeTab = function (tab) {
-      var index = $scope.tabs.indexOf(tab);
-      $scope.tabs.splice(index, 1);
-    };
+	var previous = null;
+	$scope.selected = null;
+	$scope.tabs = $localStorage.tabs || [];
+	delete $localStorage.tabs;
+	$scope.selectedTabIndex = 0;
+	$scope.$watch('selectedTabIndex', function(current, old){
+		previous = $scope.selected;
+		$scope.selected = $scope.tabs[current];
+		if ( old + 1 && (old != current)) console.log('Goodbye ' + previous.title + '!');
+		if ($scope.selected && (current + 1) ) console.log('Hello ' + $scope.selected.title + '!');
+	});
 
-    $scope.openInNew = function (tab){
+	$scope.addTab = function (title, view) {
+		view = view || title + " Content View";
+		tabs.push({ title: title, content: view, disabled: false});
+	};
+
+	$scope.removeTab = function (tab) {
+		var index = $scope.tabs.indexOf(tab);
+		$scope.tabs.splice(index, 1);
+	};
+
+	$scope.openInNew = function (tab){
 		$localStorage.tabs = [tab];
 		$timeout(function(){
 			var url = $state.href('home');
@@ -142,7 +144,7 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 		},500);				
 	}
 
-    $scope.removeExpression = function (){
+	$scope.validateExpressions = function (){
 		$scope.validate.expressions = ($scope.formData.expressions.length == 0);
 	}
 
@@ -176,7 +178,7 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 			chighlights[chighlights.indexOf()] = search;
 		}
 		var index = chighlights.indexOf(search)
-				
+
 		if(search && content){
 			if((highlights.length == 1) || (!hasInArray(highlights, search))){
 				$scope.tabs[$scope.selectedTabIndex].content = content.replace(new RegExp(search, 'g'),'<span class="ç'+index+'">'+search+'<i id="'+index+'"></i></span>');
@@ -185,7 +187,7 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 				}
 			}else{				
 				highlights = highlights.sort(function(a, b){
-				  return b.length - a.length;
+					return b.length - a.length;
 				});
 
 				var orig = $scope.tabs[$scope.selectedTabIndex].highlights;
@@ -209,32 +211,43 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 			chighlights[chighlights.indexOf(search)] = undefined;
 		}
 		/*$scope.tabs[$scope.selectedTabIndex].content = content.replace(new RegExp('<span(.*?'+search+')<\/span>', 'g'), search);*/
-			
+
 	}
 
 	$scope.selectHighlights = function (search){
 		console.log(search);			
 	}	
 
- })
-.config(function($locationProvider) {
-    $locationProvider
-        .html5Mode({
+}
+
+app.config(AppConfig);
+
+AppConfig.$inject = ['$locationProvider','$stateProvider','$mdThemingProvider'];
+function AppConfig ($locationProvider,$stateProvider,$mdThemingProvider) {
+	$locationProvider
+	.html5Mode({
             enabled: true, // set HTML5 mode
             requireBase: false // I removed this to keep it simple, but you can set your own base url
         });
-})
-.config(function($locationProvider,$stateProvider,$mdThemingProvider) {
-  
-  $mdThemingProvider.theme('docs-dark', 'default')
-  .primaryPalette('yellow')
-  .dark()
 
-  var home = {
-    name: 'home',
-    url: '/',
-    templateUrl: 'main.html'
-  };
+	$mdThemingProvider.theme('docs-dark', 'default')
+	.primaryPalette('yellow')
+	.dark()
 
-  $stateProvider.state(home);
-});
+	var home = {
+		name: 'home',
+		url: '/',
+		templateUrl: 'main.html'
+	};
+
+	$stateProvider.state(home);
+
+	var x = {
+		name: 'x',
+		url: '/x11233123',
+		template: 'hahahahahaha'
+	};
+
+
+	$stateProvider.state(x);
+}

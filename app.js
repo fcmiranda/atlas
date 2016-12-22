@@ -47,15 +47,14 @@ router.post('/zip', function (req, res) {
 });
 
 app.use('/api', router);
-
+var server = http.createServer(app);
+reload(server, app) 
+//use deve vir apos o reload, pois é carregado na ordem especificada pelo middleware.
+//Se colocado antes do reload todas as rotas posteriores não funcionarão
+// exemplo se app.use('/api', router); estivesse apos o app.use('/*') todas as rotas não iriam funcionar pois carregariam o index.html
 app.use('/*', function(req, res) {
   res.sendFile(path.join(publicDir, 'index.html'))
 })
-
-var server = http.createServer(app);
-
-// Reload code here 
-reload(server, app) 
  
 server.listen(app.get('port'), function(){
   console.log("Web server listening on port " + app.get('port'));

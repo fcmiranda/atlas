@@ -65,7 +65,8 @@
 						delete-button-label="Remove Tag"
 						delete-hint="Press delete to remove tag"
 						secondary-placeholder="+Tag"
-						md-on-remove="removeExpression($chip,$index)"
+						md-on-add="validateExpressions($chip,$index)"
+						md-on-remove="validateExpressions($chip,$index)"
 						required>
 					</md-chips>					
 					<div class="custom-error" ng-messages="validate">

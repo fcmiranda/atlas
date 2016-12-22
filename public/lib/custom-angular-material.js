@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
@@ -18007,9 +18007,8 @@ function SelectProvider($$interimElementProvider) {
        *
        */
       function autoFocus(focusedNode) {
-
-        if (focusedNode && !focusedNode.hasAttribute('disabled')) {
-          $(focusedNode).closest("md-select-menu md-content").get(0).scrollTop = focusedNode.id.replace("select_option_", "") * 20
+        if (focusedNode && !focusedNode.hasAttribute('disabled')) {         
+          $(focusedNode).closest('md-content').get(0).scrollTop = (focusedNode.offsetTop - 30);
         }
       }
 
@@ -18309,7 +18308,8 @@ function SelectProvider($$interimElementProvider) {
 
       var focusedNode = centeredNode;
       if ((focusedNode.tagName || '').toUpperCase() === 'MD-OPTGROUP') {
-        focusedNode = optionNodes[0] || contentNode.firstElementChild || contentNode;
+        focusedNode = 
+        contentNode.firstElementChild || contentNode;
         centeredNode = focusedNode;
       }
       // Cache for autoFocus()
@@ -25241,7 +25241,7 @@ MdChipsCtrl.prototype.hasFocus = function () {
           type="button"\
           aria-hidden="true"\
           tabindex="-1">\
-        <md-icon class="material-icons" >close</md-icon>\
+        <md-icon class="material-icons">close</md-icon>\
         <span class="md-visually-hidden">\
           {{$mdChipsCtrl.deleteButtonLabel}}\
         </span>\

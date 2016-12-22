@@ -217,14 +217,14 @@ md-tab-item md-icon {
     display: block;
     font-family: Roboto, "Helvetica Neue", sans-serif;
     font-size: 12px;
-    padding: 0 0 0px 3px;
+        padding: 0px 0 4px 0px;
     vertical-align: middle;
 }
 
 .md-chips md-chip {
     border-radius: 5px;
     height: 19px;
-    line-height: 17px;
+    line-height: 20px;
     margin: 0px 4px 0 0;
     padding: 0 12px 0 12px;
 }
@@ -246,9 +246,9 @@ md-tab-item md-icon {
 }
 
 .md-chips md-chip .md-chip-remove md-icon {
-    top: -3px;
+	top: -1px;
     left: -18px;
-    font-size: 15px;
+    font-size: 16px;
     height: 10px;
     width: 10px;
     min-width: 0;
@@ -358,4 +358,22 @@ md-tab-item md-icon {
 
 md-tabs.md-default-theme.md-accent > md-tabs-wrapper, md-tabs.md-accent > md-tabs-wrapper {
     background-color: rgb(255,138,101);
+}
+
+md-ink-bar {
+    position: absolute;
+    left: auto;
+    right: auto;
+    /* top: 0; */
+    bottom: 22px;
+    height: 2px;
+}
+
+md-tabs.md-default-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]), md-tabs.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {
+    color: rgba(43, 33, 36, 0.51);
+}
+
+md-tabs.md-default-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-ink-bar, md-tabs.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-ink-bar {
+    color: rgb(0, 0, 0);
+    background: rgb(0, 232, 213);
 }
