@@ -13,7 +13,6 @@ module.exports.extractInterval = extractInterval;
 module.exports.extractFiles = extractFiles;
 module.exports.folders = folders;
 module.exports.files = getFiles;
-module.exports.generate = generate;
 
 function l (info){
 	console.log(info);
@@ -27,7 +26,7 @@ function folders (){
 }
 
 function getFiles (){
-	return fs.readdirSync(config.zip.path).filter(function(file) {
+	return fs.readdirSync(config.zip.prod).filter(function(file) {
 	    return path.extname(file) === '.zip';
 	});
 }
@@ -97,7 +96,7 @@ function exec (files, expressions, res) {
 	    	var dir = config.file.path+temp+file.replace(/\.[^/.]+$/, "");			
 			if(!fs.existsSync(dir)){
 		    	var unzipSync = new unzipSync.UnzipSync({folderPath: dir});		    	
-		    	unzipSync.extract(path.join(config.zip.path,file));
+		    	unzipSync.extract(path.join(config.zip.prod,file));
 		    	l("Files extracted on path: "+dir);		    	
 		    }
 		    dirs.push(dir);
@@ -148,40 +147,6 @@ function exec (files, expressions, res) {
 function logTime(string, start){
     console.log(string + ' executed in ' + (new Date().getTime() - start)/1000 + ' seconds');
 }
-
-function generate (dir, obj, expression){
-	var filenames = fs.readdirSync(dir);
-	var times = 0;
-
-	l("Reading files on directory: "+dir);
-	for(var index = 0; index < filenames.length; index++){
-		var start1 = new Date().getTime();
-		var binary = fs.readFileSync(dir + "/" + filenames[index]);
-		var array = iconv.decode(binary, 'win1252').split("\n");	
-		var i = array.length;
-
-
-		RegExp.escape = function(text) {
-		  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-		};
-
-		while (i--) {
-			if(!array[i].match(new RegExp(expression)) || obj.lines.indexOf(array[i]) > -1){
-				array.splice(i, 1);
-			}
-		}
-		obj.lines = obj.lines.concat(array);
-		delete array;
-
-		var end1 = new Date().getTime();
-		var time = end1 - start1;
-		console.log('Execution time: ' + time/1000 + ' seconds');
-		times = times + time;
-	}
-
-	console.log('Execution time: ' + times + ' seconds');	
-}
-
 
 var deleteFolderRecursive = function(path) {
 	console.log(path);

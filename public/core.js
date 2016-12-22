@@ -1,4 +1,5 @@
-var app = angular.module('app', ['ui.bootstrap', 'checklist-model', 'ngStorage', 'ngSanitize', 'ngMaterial', 'ngMessages', 'cgBusy','ui.router']);
+
+var app = angular.module('app', ['checklist-model', 'ngStorage', 'ngSanitize', 'ngMaterial', 'ngMessages', 'cgBusy','ui.router']);
 
 app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast) {
 
@@ -6,8 +7,8 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 .controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $localStorage, $http, $element, $mdToast, $state) {
     $scope.count = 0;	
 	$scope.formData = {
-		expression: 'F12345|F11111',
-		expressions: ['F4404357'],
+		/*expression: 'F12345|F11111',*/
+		expressions: [],
 		start: moment(0, "HH"),
 		end: moment(),		
 	};	
@@ -20,14 +21,14 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 	$scope.clicked = false;
 	$scope.searchTerm = '';
 
-	$http.get('/files').then(
+	$http.get('api/files').then(
 		function (response) {					
 			$scope.files = response.data;
-			$scope.formData.selectedFiles = [response.data[0]];
+			$scope.formData.selectedFiles = [];
 		}
 	);
 
-	$scope.exportByDate = function () {
+	/*$scope.exportByDate = function () {
 		$scope.alerts = [];
 		delete $scope.extracted;
 		$scope.alerts = [{msg: 'processando...', type: 'warning'}];
@@ -48,10 +49,10 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 				$scope.alerts = [{msg: response.data.message, type: 'danger'}];
 			}
 		);			
-	};
+	};*/
 
 	$scope.exportByFiles = function () {
-		$scope.promise = $http.post('/extractFiles', {
+		$scope.promise = $http.post('api/extractFiles', {
 			expressions: $scope.formData.expressions,
 			files: $scope.formData.selectedFiles
 		}).then(
@@ -62,27 +63,17 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 				$scope.toast(response.data.message,'error');
 			}
 		);			
-	};
-
-	function asHTML(text) {
-		var expression = new RegExp($scope.savedExpression, "g");		
-		return text;
-		//return text.replace(/(?:\r\n|\r|\n)/g, '<span>\n</span>')	.replace(expression, '<span class="ex-1">'+ $scope.savedExpression + '</span>');
 	}
 
-	$scope.closeAlert = function(index) {
-	    $scope.alerts.splice(index, 1);
-	};
-
 	$scope.newZip = function () {		
-		$http.post('/zip', {
+		$http.post('api/zip', {
 		})
 		.then(
 			function (response) {					
 				$scope.extracted = response.data.extracted;
 				$scope.extractedHTML = response.data.extracted;
 
-				$http.get('/files').then(
+				$http.get('api/files').then(
 				function (response) {					
 					$scope.files = response.data;
 				}, function (response) {
@@ -226,7 +217,13 @@ app.run(function($rootScope, $http, $timeout, $interval, $localStorage, $mdToast
 	}	
 
  })
-
+.config(function($locationProvider) {
+    $locationProvider
+        .html5Mode({
+            enabled: true, // set HTML5 mode
+            requireBase: false // I removed this to keep it simple, but you can set your own base url
+        });
+})
 .config(function($locationProvider,$stateProvider,$mdThemingProvider) {
   
   $mdThemingProvider.theme('docs-dark', 'default')

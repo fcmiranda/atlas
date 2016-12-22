@@ -6,3 +6,8 @@
 !params=action=login&login=f0118619&password=bcf03dcfcea2d1058f17e04fd100ba62&queue=&extension=93256
 !params=action=login&login=f0118611&password=bcf03dcfcea2d1058f17e04fd100ba62&queue=&extension=93256
 !params=action=login&login=f0118619&password=bcf03dcfcea2d1058f17e04fd100ba62&queue=&extension=93256
+!118!f0118619 - 2016-12-16 07:46:22 - Agente: f0118619 LoginDAC:  Extensao: 91533 deslogado por TIMEOUT!
+!NEW REQUEST hhahhaha
+!NEW REQUEST hhahhaha
+!NEW REQUEST hhahhaha
+!118!f0122795 - 2016-12-16 07:46:22 - Agente: f0122795 LoginDAC:  Extensao: 91533 deslogado por TIMEOUT!
