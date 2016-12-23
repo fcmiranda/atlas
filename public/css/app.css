@@ -35,6 +35,16 @@
 		max-height: 100%;
 	}
 
+	md-select.md-default-theme .md-select-value, md-select .md-select-value {
+	    border-bottom-color: rgba(0,0,0,0.12);
+	    border: 0px;
+	}
+	md-select.md-default-theme:not([disabled]):focus .md-select-value, md-select:not([disabled]):focus .md-select-value {
+	    border-bottom-color: rgb(63,81,181);
+	    color: rgba(0,0,0,0.87);
+	    border: 0px;
+	}
+
 	.selectdemoSelectHeader .demo-header-searchbox {
 		border: none;
 		outline: none;
@@ -105,23 +115,14 @@
 		top: -15px;
 	}
 
-	md-input-container.select {
-		top:-15px;		
-	}
-
 	md-input-container.select.md-input-focused label:not(.md-no-float), md-input-container.select.md-input-has-placeholder label:not(.md-no-float), md-input-container.select.md-input-has-value label:not(.md-no-float) {
 		transform: translate3d(0, 16px, 0) scale(0.75);
-	}
-	md-input-container.select.md-input-invalid {
-		top: -8px;
 	}
 
 	md-optgroup {
 		display: block;
 		margin-top: 34px;
-	}
-
-	
+	}	
 
 	md-select {
 		max-width: 210px;
@@ -165,17 +166,13 @@
 		padding: 0px 0;
 		margin: 0px 4px;
 	}
-	.toolbar .md-button {
-		top: -16px;
-	}
-
+	
 	.md-toolbar-tools {
 		padding:0;
 		font-size: 	85%;
 	}
 
 	.menu-bar{
-		top: 6px;
 		position: relative;
 	}
 
@@ -183,12 +180,15 @@
 		position: relative;
 		z-index: 2;
 		width: 100%;
+		height: initial;
+		border-bottom: 1px solid #e1e1e1;
 	}
 
 md-tabs-content-wrapper {
     position: absolute;
-    top: 124px;
-    font-size: 13px;    
+    top: 86px;
+    font-size: 13px;
+    border: 1px solid #e1e1e1;  
 }
 
 md-tabs:not(.md-no-tab-content):not(.md-dynamic-height) {
@@ -217,23 +217,25 @@ md-tab-item md-icon {
     display: block;
     font-family: Roboto, "Helvetica Neue", sans-serif;
     font-size: 12px;
-        padding: 0px 0 4px 0px;
+    padding: 0px 0 0px 0px;
     vertical-align: middle;
+    box-shadow: 0 0 !important;
 }
 
 .md-chips md-chip {
     border-radius: 5px;
     height: 19px;
     line-height: 20px;
-    margin: 0px 4px 0 0;
-    padding: 0 12px 0 12px;
+    margin: 3px 4px 0 0;
+    padding: 0 0 0 0;
 }
 
 .md-chips .md-chip-input-container input:not([type]), .md-chips .md-chip-input-container input[type="email"], .md-chips .md-chip-input-container input[type="number"], .md-chips .md-chip-input-container input[type="tel"], .md-chips .md-chip-input-container input[type="url"], .md-chips .md-chip-input-container input[type="text"] {
-    border: 0;
-    height: 20px;
-    line-height: 20px;
-    padding: 0;
+    border-radius: 5px;
+    height: 19px;
+    line-height: 22px;
+    margin: 0px 4px 0 0;
+    padding: 0 12px 0 12px;
 }
 
 .md-chips md-chip .md-chip-remove{
@@ -241,8 +243,11 @@ md-tab-item md-icon {
 	height: 0;
 }
 
-.toolbar .md-chips{
-    margin-top: 5px;
+.toolbar .md-chips {
+    margin-top: 10px;
+    padding: 0px 0 0px 10px;
+    box-shadow: 0 0 !important;
+    border-left: 1px solid #b1b1b1;
 }
 
 .md-chips md-chip .md-chip-remove md-icon {
@@ -256,8 +261,8 @@ md-tab-item md-icon {
 }
 
 .md-chips .md-chip-input-container:not(:first-child) {
-    margin: 0px 8px 0 0;
-    height: 24px;
+    margin: 2px 8px 0 0;
+    height: initial;
     line-height: 20px;
 }
 
@@ -270,6 +275,13 @@ md-tab-item md-icon {
 .md-chips .md-chip-input-container {
     margin: 0px 8px 0 0;
     height: 20px;
+}
+
+.md-chips.md-removable md-chip .md-chip-content {
+     border-radius: 5px;
+    height: 19px;
+    line-height: 20px;
+    padding: 0 12px 0 12px;
 }
 
 .custom-error{
@@ -356,24 +368,48 @@ md-tab-item md-icon {
 .ç22 {background-color:#737373}
 .ç23 {background-color:#CCCCCC}
 
-md-tabs.md-default-theme.md-accent > md-tabs-wrapper, md-tabs.md-accent > md-tabs-wrapper {
-    background-color: rgb(255,138,101);
+
+/*help-bar*/
+.helpbar {
+	border-bottom: 1px solid #e1e1e1;
+	background: white; 
 }
+
+/*tabs*/
 
 md-ink-bar {
     position: absolute;
     left: auto;
     right: auto;
-    /* top: 0; */
     bottom: 22px;
     height: 2px;
 }
 
-md-tabs.md-default-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]), md-tabs.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-tab-item:not([disabled]) {
-    color: rgba(43, 33, 36, 0.51);
+.tabsdemoDynamicHeight md-content {
+  background-color: transparent !important; 
+}
+ 
+md-tabs {
+	background: #f6f6f6;
+	border-bottom: 1px solid #e1e1e1;
 }
 
-md-tabs.md-default-theme.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-ink-bar, md-tabs.md-accent > md-tabs-wrapper > md-tabs-canvas > md-pagination-wrapper > md-ink-bar {
-    color: rgb(0, 0, 0);
-    background: rgb(0, 232, 213);
+md-tabs md-tabs-wrapper {
+  background: white; 
+}
+
+md-tab-content {
+	background-color: white;
+}
+
+md-chip {
+    border-radius: 5px;
+    height: 19px;
+    line-height: 20px;
+    margin: 0px 4px 0 0;
+    padding: 0 5px 0 5px;
+}
+
+.md-chips.md-removable md-chip {
+    padding-right: 0px;
 }

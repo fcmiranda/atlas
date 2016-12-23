@@ -113,6 +113,7 @@ function AppController ($scope, $timeout, $mdSidenav, $localStorage, $http, $ele
 		});
 	};
 
+
 	var previous = null;
 	$scope.selected = null;
 	$scope.tabs = $localStorage.tabs || [];
@@ -229,10 +230,6 @@ function AppConfig ($locationProvider,$stateProvider,$mdThemingProvider) {
             enabled: true, // set HTML5 mode
             requireBase: false // I removed this to keep it simple, but you can set your own base url
         });
-
-	$mdThemingProvider.theme('docs-dark', 'default')
-	.primaryPalette('yellow')
-	.dark()
 
 	var home = {
 		name: 'home',

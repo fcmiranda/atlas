@@ -25203,7 +25203,7 @@ MdChipsCtrl.prototype.hasFocus = function () {
           class="md-chips">\
         <md-chip ng-repeat="$chip in $mdChipsCtrl.items"\
             index="{{$index}}"\
-            ng-class="{\'md-focused\': $mdChipsCtrl.selectedChip == $index, \'md-readonly\': !$mdChipsCtrl.ngModelCtrl || $mdChipsCtrl.readonly}">\
+            ng-class="{\'ç{{$index}}\': $mdChipsCtrl.applyColors, \'md-focused\': $mdChipsCtrl.selectedChip == $index, \'md-readonly\': !$mdChipsCtrl.ngModelCtrl || $mdChipsCtrl.readonly}">\
           <div class="md-chip-content"\
               tabindex="-1"\
               aria-hidden="true"\
@@ -25241,7 +25241,6 @@ MdChipsCtrl.prototype.hasFocus = function () {
           type="button"\
           aria-hidden="true"\
           tabindex="-1">\
-        <md-icon class="material-icons">close</md-icon>\
         <span class="md-visually-hidden">\
           {{$mdChipsCtrl.deleteButtonLabel}}\
         </span>\
@@ -25283,7 +25282,8 @@ MdChipsCtrl.prototype.hasFocus = function () {
         deleteHint: '@',
         deleteButtonLabel: '@',
         separatorKeys: '=?mdSeparatorKeys',
-        requireMatch: '=?mdRequireMatch'
+        requireMatch: '=?mdRequireMatch',
+        applyColors: '=?applyColors',
       }
     };
 
@@ -25362,6 +25362,8 @@ MdChipsCtrl.prototype.hasFocus = function () {
           // Chip editing functionality assumes we are using the default chip template.
           mdChipsCtrl.enableChipEdit = false;
         }
+
+        mdChipsCtrl.applyColors = mdChipsCtrl.applyColors || false;
 
         mdChipsCtrl.chipContentsTemplate = chipContentsTemplate;
         mdChipsCtrl.chipRemoveTemplate   = chipRemoveTemplate;
