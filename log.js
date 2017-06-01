@@ -1,20 +1,16 @@
 var fs = require('fs');
 var path = require('path');
-var fstream = require('fstream');
 var _ = require('lodash');
 var iconv = require('iconv-lite');
-var unzipSync = require('unzip-sync');
 var Fiber = require('fibers');
 var moment = require('moment');
-var config = require('./config.json'); 
+var config = require('./config.json');
 var async = require('async');
 
 module.exports.extractInterval = extractInterval;
 module.exports.extractFiles = extractFiles;
 module.exports.folders = folders;
 module.exports.files = getFiles;
-
-console.log('1');
 
 function l (info){
 	console.log(info);
@@ -33,24 +29,10 @@ function getFiles (){
 	});
 }
 
-function onError (err){
-	 throw err;
-}
-
-function fsExistsSync(myDir) {
-  try {
-    fs.accessSync(myDir, fs.F_OK);
-    return true;
-  } catch (e) {
-    return fsExistsSync(myDir);
-  }
-}
-
-
-function extractInterval (start, end, expression, res){	
+function extractInterval (start, end, expression, res){
 	var files = [];
 	getFiles().forEach(function (file){
-		var fileName = file.replace(/\.[^/.]+$/, "");			
+		var fileName = file.replace(/\.[^/.]+$/, "");
 		if(fileName >= start && fileName <= end){
 			files.push(file);
 		}
@@ -58,8 +40,8 @@ function extractInterval (start, end, expression, res){
 	if(files.length <= 0){
 		res.status(500).send({status:500, message: 'Arquivos não encontrados no período selecionado', type:'internal'});
 	}else{
-		exec(files, expression, res);    
-	}		
+		exec(files, expression, res);
+	}
 }
 
 
@@ -69,7 +51,7 @@ function l (info){
 
 function extractFiles (files, expression, res){
 	exec(files, expression, res);
-	deleteFolderRecursive(config.file.path);	
+	deleteFolderRecursive(config.file.path);
 }
 
 function exists (regex, text) {
@@ -81,7 +63,7 @@ function exec (files, expressions, res) {
 	var pattern = expressions.join('|');
 	var expressions = _.zipObject(expressions);
 	for (var expression in expressions) {
-        expressions[expression] = '';        
+        expressions[expression] = '';
     }
 
 	var dir = config.file.path;
@@ -95,39 +77,39 @@ function exec (files, expressions, res) {
 
 		files.forEach((file) => {
 		  	var unzipSync = require('unzip-sync');
-	    	var dir = config.file.path+temp+file.replace(/\.[^/.]+$/, "");			
+	    	var dir = config.file.path+temp+file.replace(/\.[^/.]+$/, "");
 			if(!fs.existsSync(dir)){
-		    	var unzipSync = new unzipSync.UnzipSync({folderPath: dir});		    	
+		    	var unzipSync = new unzipSync.UnzipSync({folderPath: dir});
 		    	unzipSync.extract(path.join(config.zip.dev,file));
-		    	l("Files extracted on path: "+dir);		    	
+		    	l("Files extracted on path: "+dir);
 		    }
 		    dirs.push(dir);
 		});
 
-		async.eachSeries(dirs, function (dir, callback) {  
+		async.eachSeries(dirs, function (dir, callback) {
 		  console.log('Reading directory ',dir);
 		  fs.readdir(dir, function (err, files) {
 
 		    var startTimeFileReading = new Date().getTime();
 		    async.eachSeries(files, function (file, callback) {
-		 
+
 		        var lineReader = require('readline').createInterface({
-		          input: require('fs').createReadStream(dir+'/'+file).pipe(iconv.decodeStream('win1252'))          
+		          input: require('fs').createReadStream(dir+'/'+file).pipe(iconv.decodeStream('win1252'))
 		        });
 
-		        lineReader.on('line', function (line) {          
+		        lineReader.on('line', function (line) {
 		            var result = line.match(pattern);
-		            if(result)   
+		            if(result)
 		            	expressions[result[0]] += (!exists(line,expressions[result[0]])) ? (line+("\n")) : "";
 		        });
 
-		        lineReader.on('close', function(){         
+		        lineReader.on('close', function(){
 		          callback();
-		        });      
-		     
-		    }, function () {		      	      
+		        });
+
+		    }, function () {
 		      logTime('File', startTimeFileReading);
-		      callback();    
+		      callback();
 		    });
 		  });
 		}, function(){
@@ -142,7 +124,7 @@ function exec (files, expressions, res) {
 		    	delete expressions[expression];
 		    };
 			res.json({extracted: extracted});
-		});		
+		});
 	}).run();
 }
 
@@ -154,8 +136,8 @@ var deleteFolderRecursive = function(path) {
 	console.log(path);
 
   if( fs.existsSync(path)) {
-    fs.readdirSync(path).forEach(function(file,index){
-      var curPath = path + "/" + file;      
+    fs.readdirSync(path).forEach(function(file){
+      var curPath = path + "/" + file;
       var x = moment().format(config.temp.name);
       if(fs.lstatSync(curPath).isDirectory() && file !== x) { // recurse
         	deleteFolderRecursive(curPath);
@@ -164,6 +146,6 @@ var deleteFolderRecursive = function(path) {
       		l("Deletando :: " + curPath)
         	fs.unlinkSync(curPath);
       }
-    });    
+    });
   }
 };

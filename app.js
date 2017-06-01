@@ -1,23 +1,23 @@
-var express = require('express') // call express
-var app = express() // define out app using express
-var http = require('http')
-var path = require('path')
-var reload = require('reload')
-var bodyParser = require('body-parser')
-var logger = require('morgan')
-var log = require('./log.js') 
-var publicDir = path.join(__dirname, 'public')
-var moment = require('moment')
-var child_process = require('child_process')
+var express = require('express'); // call express
+var app = express(); // define out app using express
+var http = require('http');
+var path = require('path');
+var reload = require('reload');
+var bodyParser = require('body-parser');
+var logger = require('morgan');
+var log = require('./log.js');
+var publicDir = path.join(__dirname, 'public');
+var moment = require('moment');
+var child_process = require('child_process');
 var router = express.Router();
 
-app.set('port', process.env.PORT || 3000)
+app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public'));
 app.use('/node_modules', express.static(__dirname + '/node_modules/'));
-app.use(logger('dev'))
+app.use(logger('dev'));
 
-app.use(bodyParser.json() );       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+app.use(bodyParser.json() );
+app.use(bodyParser.urlencoded({
   extended: true
 }));
 
@@ -34,13 +34,13 @@ router.post('/extractFiles', function (req, res) {
 	var body = req.body;
 	setTimeout(function(){
 		log.extractFiles(body.files, body.expressions, res);
-	},2000)	
+	},2000)
 });
 
 router.post('/zip', function (req, res) {
 	var wait  = '-a'; //wait 5 seconds
 	var child_process = require('child_process')
-	child_process.exec('teste.bat '+ wait, function(error, stdout, stderr) {
+	child_process.exec('teste.bat '+ wait, function(error, stdout) {
 	  console.log(stdout);
 	    res.json({extracted: stdout});
 	});
@@ -48,14 +48,14 @@ router.post('/zip', function (req, res) {
 
 app.use('/api', router);
 var server = http.createServer(app);
-reload(server, app) 
+reload(server, app)
 //use deve vir apos o reload, pois é carregado na ordem especificada pelo middleware.
 //Se colocado antes do reload todas as rotas posteriores não funcionarão
 // exemplo se app.use('/api', router); estivesse apos o app.use('/*') todas as rotas não iriam funcionar pois carregariam o index.html
 app.use('/*', function(req, res) {
   res.sendFile(path.join(publicDir, 'index.html'))
 })
- 
+
 server.listen(app.get('port'), function(){
   console.log("Web server listening on port " + app.get('port'));
 });

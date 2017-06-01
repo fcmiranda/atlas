@@ -2,18 +2,16 @@
 var app = angular.module('app', ['ngStorage', 'ngSanitize', 'ngMaterial', 'ngMessages','ui.router']);
 
 app.run(AppRun)
-function AppRun (){}
-
+function AppRun (){};
 app.controller('AppCtrl', AppController)
 AppController.$inject = ['$scope', '$timeout', '$mdSidenav', '$localStorage', '$http', '$element', '$mdToast', '$state'];
 function AppController ($scope, $timeout, $mdSidenav, $localStorage, $http, $element, $mdToast, $state) {
-	$scope.count = 0;	
-	$scope.formData = {
-		/*expression: 'F12345|F11111',*/
+	$scope.count = 0;
+	$scope.formData = {		
 		expressions: [],
 		start: moment(0, "HH"),
-		end: moment(),		
-	};	
+		end: moment(),
+	};
 	$scope.validate = {
 		'expressions': false
 	}
@@ -24,10 +22,10 @@ function AppController ($scope, $timeout, $mdSidenav, $localStorage, $http, $ele
 	$scope.searchTerm = '';
 
 	$http.get('api/files').then(
-		function (response) {					
-			$scope.files = response.data;
-			$scope.formData.selectedFiles = [];
-		}
+			function (response) {
+				$scope.files = response.data;
+				$scope.formData.selectedFiles = [];
+			}
 		);
 
 	/*$scope.exportByDate = function () {
@@ -42,15 +40,15 @@ function AppController ($scope, $timeout, $mdSidenav, $localStorage, $http, $ele
 			expression: $scope.formData.expression,
 		})
 		.then(
-			function (response) {					
+			function (response) {
 				$scope.session = response.data.session;
 				$scope.extracted = response.data.extracted;
 				$scope.extractedHTML = asHTML(response.data.extracted);
-				$scope.alerts = [];				
+				$scope.alerts = [];
 			}, function (response) {
 				$scope.alerts = [{msg: response.data.message, type: 'danger'}];
 			}
-		);			
+		);
 	};*/
 
 	$scope.exportByFiles = function () {
@@ -58,33 +56,31 @@ function AppController ($scope, $timeout, $mdSidenav, $localStorage, $http, $ele
 			expressions: $scope.formData.expressions,
 			files: $scope.formData.selectedFiles
 		}).then(
-		function (response) {
-			$scope.tabs = $scope.tabs.concat(response.data.extracted);	
-			$scope.toast('Sucesso!','success');
-		}, function (response) {
-			$scope.toast(response.data.message,'error');
-		}
-		);			
+			function (response) {
+				$scope.tabs = $scope.tabs.concat(response.data.extracted);
+				$scope.toast('Sucesso!','success');
+			}, function (response) {
+				$scope.toast(response.data.message,'error');
+			}
+		);
 	}
 
-	$scope.newZip = function () {		
+	$scope.newZip = function () {
 		$http.post('api/zip', {
 		})
 		.then(
-			function (response) {					
+			function (response) {
 				$scope.extracted = response.data.extracted;
 				$scope.extractedHTML = response.data.extracted;
 
 				$http.get('api/files').then(
-					function (response) {					
+					function (response) {
 						$scope.files = response.data;
-					}, function (response) {
-
 					});
 			}, function (response) {
 				$scope.alerts = [{msg: response.data.message, type: 'danger'}];
 			}
-			);
+		);
 	}
 
 	$scope.clearSearchTerm = function() {
@@ -92,13 +88,12 @@ function AppController ($scope, $timeout, $mdSidenav, $localStorage, $http, $ele
 	};
 
 	$scope.submit = function (){
-		$scope.exportByFiles();	
+		$scope.exportByFiles();
 	}
 
 	$element.find('input').on('keydown', function(ev) {
 		ev.stopPropagation();
 	});
-
 
 	$scope.toast = function(text, type) {
 		$mdToast.show({
@@ -109,10 +104,9 @@ function AppController ($scope, $timeout, $mdSidenav, $localStorage, $http, $ele
 			toast: {
 				text: text,
 				type: type
-			} 
+			}
 		});
 	};
-
 
 	var previous = null;
 	$scope.selected = null;
@@ -126,11 +120,6 @@ function AppController ($scope, $timeout, $mdSidenav, $localStorage, $http, $ele
 		if ($scope.selected && (current + 1) ) console.log('Hello ' + $scope.selected.title + '!');
 	});
 
-	$scope.addTab = function (title, view) {
-		view = view || title + " Content View";
-		tabs.push({ title: title, content: view, disabled: false});
-	};
-
 	$scope.removeTab = function (tab) {
 		var index = $scope.tabs.indexOf(tab);
 		$scope.tabs.splice(index, 1);
@@ -141,8 +130,8 @@ function AppController ($scope, $timeout, $mdSidenav, $localStorage, $http, $ele
 		$timeout(function(){
 			var url = $state.href('home');
 			window.open(url,'_blank');
-			$scope.removeTab(tab);	
-		},500);				
+			$scope.removeTab(tab);
+		},500);
 	}
 
 	$scope.validateExpressions = function (){
@@ -186,7 +175,7 @@ function AppController ($scope, $timeout, $mdSidenav, $localStorage, $http, $ele
 				if(!$scope.tabs[$scope.selectedTabIndex].pureContent){
 					$scope.tabs[$scope.selectedTabIndex].pureContent = content;
 				}
-			}else{				
+			}else{
 				highlights = highlights.sort(function(a, b){
 					return b.length - a.length;
 				});
@@ -196,14 +185,14 @@ function AppController ($scope, $timeout, $mdSidenav, $localStorage, $http, $ele
 
 				highlights.forEach((hl) => {
 					content = content.replace(new RegExp(hl, 'g'),'<span class="ç'+orig.indexOf(hl)+'">'+hl+'<i id="'+orig.indexOf(hl)+'"></i></span>');
-				});	
+				});
 
 				$scope.tabs[$scope.selectedTabIndex].content = content;
-			}					
-		}			
+			}
+		}
 	}
 
-	$scope.removeHighlights = function (search, index){
+	$scope.removeHighlights = function (search){
 		var content = $scope.tabs[$scope.selectedTabIndex].content;
 		var chighlights = $scope.tabs[$scope.selectedTabIndex].chighlights;
 
@@ -211,40 +200,26 @@ function AppController ($scope, $timeout, $mdSidenav, $localStorage, $http, $ele
 			$scope.tabs[$scope.selectedTabIndex].content = content.replace(new RegExp('<span class="ç'+chighlights.indexOf(search)+'">|'+'<i id="'+chighlights.indexOf(search)+'"></i></span>', 'g'), '');
 			chighlights[chighlights.indexOf(search)] = undefined;
 		}
-		/*$scope.tabs[$scope.selectedTabIndex].content = content.replace(new RegExp('<span(.*?'+search+')<\/span>', 'g'), search);*/
-
 	}
 
 	$scope.selectHighlights = function (search){
-		console.log(search);			
-	}	
-
+		console.log(search);
+	}
 }
 
 app.config(AppConfig);
 
 AppConfig.$inject = ['$locationProvider','$stateProvider','$mdThemingProvider'];
-function AppConfig ($locationProvider,$stateProvider,$mdThemingProvider) {
+function AppConfig ($locationProvider,$stateProvider) {
 	$locationProvider
 	.html5Mode({
             enabled: true, // set HTML5 mode
             requireBase: false // I removed this to keep it simple, but you can set your own base url
         });
-
 	var home = {
 		name: 'home',
 		url: '/',
 		templateUrl: 'main.html'
 	};
-
 	$stateProvider.state(home);
-
-	var x = {
-		name: 'x',
-		url: '/x11233123',
-		template: 'hahahahahaha'
-	};
-
-
-	$stateProvider.state(x);
 }

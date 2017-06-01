@@ -1,4 +1,0 @@
-!params=action=login&login=f0119312&password=bcf03dcfcea2d1058f17e04fd100ba62&queue=&extension=91100
-!params=action=login&login=f0119312&password=bcf03dcfcea2d1058f17e04fd100ba62&queue=&extension=91100
-!params=action=login&login=f0118619&password=bcf03dcfcea2d1058f17e04fd100ba62&queue=&extension=93256
-!params=action=login&login=f0118619&password=bcf03dcfcea2d1058f17e04fd100ba62&queue=&extension=93256
