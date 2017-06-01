@@ -1,12 +1,12 @@
 {
 	"zip": {
 		"dev": "./util/zips",
-		"prod": "//logsusabilidade/logs/Usabilidade"
+		"prod": "//usabilidade/logs/Usabilidade"
 	},
 	"file": {
 		"path": "./logs/temporario"
 	},
-	
+
 	"temp": {
 		"name": "t3p-YYYYMMDD"
 	}

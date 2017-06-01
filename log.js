@@ -24,7 +24,7 @@ function folders (){
 }
 
 function getFiles (){
-	return fs.readdirSync(config.zip.dev).filter(function(file) {
+	return fs.readdirSync(config.zip.prod).filter(function(file) {
 	    return path.extname(file) === '.zip';
 	});
 }
@@ -80,7 +80,7 @@ function exec (files, expressions, res) {
 	    	var dir = config.file.path+temp+file.replace(/\.[^/.]+$/, "");
 			if(!fs.existsSync(dir)){
 		    	var unzipSync = new unzipSync.UnzipSync({folderPath: dir});
-		    	unzipSync.extract(path.join(config.zip.dev,file));
+		    	unzipSync.extract(path.join(config.zip.prod,file));
 		    	l("Files extracted on path: "+dir);
 		    }
 		    dirs.push(dir);
