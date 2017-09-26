@@ -1,13 +1,6 @@
 {
-	"zip": {
-		"dev": "./util/zips",
-		"prod": "//usabilidade/logs/Usabilidade"
-	},
-	"file": {
-		"path": "./logs/temporario"
-	},
-
-	"temp": {
-		"name": "t3p-YYYYMMDD"
-	}
+    "pastaBase": "C:/desenv/logs",
+    "encode" : {
+        "Usabilidade" : "win1252"
+    }
 }

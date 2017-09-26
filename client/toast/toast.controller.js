@@ -1,4 +1,5 @@
-app.controller('ToastCtrl', function($scope, $mdToast, $mdDialog, toast) {
+(function (angular) {
+  angular.module("atlas").controller('ToastCtrl', function($scope, $mdToast, $mdDialog, toast) {
       var isDlgOpen;
 
       $scope.text = toast.text;
@@ -30,4 +31,6 @@ app.controller('ToastCtrl', function($scope, $mdToast, $mdDialog, toast) {
             isDlgOpen = false;
           })
       };
+
     });
+})(window.angular);

@@ -1,0 +1,62 @@
+<div class="container" layout="column" flex>
+    <form name="myForm" ng-submit="logsCtrl.submitForm(myForm)" novalidate>
+        <div layout="row" style="height: 60px">
+            <md-input-container  flex="10">
+                <label>App</label>
+                <md-select ng-model="logsCtrl.selectedApps" multiple md-no-asterisk required name="selectedFiles">
+                    <md-optgroup label="apps">
+                        <md-option ng-value="app" opt="{{$index}}" ng-repeat="app in logsCtrl.apps | orderBy:'-'"><span data-ng-bind="app.name"></span></md-option>
+                    </md-optgroup>
+                </md-select>
+            </md-input-container>
+            <md-input-container flex="15">
+                <label>Data e Hora Inicial</label>
+                <input name="start" required mdc-datetime-picker="" date="true" time="true" type="text" id="datetimeedit" placeholder="YYYY-MM-DD HH:MM" show-todays-date="" minutes="true" edit-input="true" show-icon="true" max-date="logsCtrl.dateTimeEnd" ng-model="logsCtrl.dateTimeStart" class=" dtp-no-msclear dtp-input md-input">
+                <div ng-messages="myForm.start.$error" style="color:maroon" role="alert">
+                    <div ng-message="required">Obrigatorio</div>
+                </div>
+            </md-input-container>
+            <md-input-container flex="15">
+                <label>Data e Hora Final</label>
+                <input mdc-datetime-picker="" date="true" time="true" type="text" id="datetimeedit" placeholder="YYYY-MM-DD HH:MM" show-todays-date="" minutes="true" edit-input="true" show-icon="true" min-date="logsCtrl.dateTimeStart" ng-model="logsCtrl.dateTimeEnd" class=" dtp-no-msclear dtp-input md-input">
+            </md-input-container>
+            <md-switch ng-model="logsCtrl.isRegex" aria-label="1">
+            </md-switch>
+            <div flex >
+                <md-input-container ng-if="logsCtrl.isRegex" class="md-block" flex>
+                    <label>Regex</label>
+                    <input ng-enter required name="regex" ng-model="logsCtrl.regexExpression">
+                    <div ng-messages="myForm.regex.$error" style="color:maroon" role="alert">
+                        <div ng-message="required">Obrigatorio</div>
+                    </div>
+                 </md-input-container>
+                <md-chips name="chips" md-on-add="logsCtrl.addChip($chip)" md-on-remove="logsCtrl.removeChip($chip)" ng-if="!logsCtrl.isRegex" required ng-model="logsCtrl.chips" readonly="false" md-removable="true" placeholder="Enter a tag" delete-button-label="Remove Tag" delete-hint="Press delete to remove tag" secondary-placeholder="+Tag" required></md-chips>
+            </div>
+            <md-button type="submit" class="md-raised md-primary" ng-disabled="myForm.$invalid || (!logsCtrl.isRegex && logsCtrl.chips.length == 0)">Pesquisar</md-button>
+        </div>
+    </form>
+    <md-content ng-show="logsCtrl.tabs.length > 0">
+        <div flex layout="row" class="helpbar">
+            <div flex>
+                <md-chips ng-model="logsCtrl.tabs[logsCtrl.selectedTabIndex].highlights" readonly="false" placeholder="+ highlights" delete-button-label="Remove Tag" delete-hint="Press delete to remove tag" secondary-placeholder="+Tag" md-on-add="logsCtrl.tratarTab(logsCtrl.tabs[logsCtrl.selectedTabIndex])" md-on-remove="logsCtrl.tratarTab(logsCtrl.tabs[logsCtrl.selectedTabIndex])" apply-colors="true" required></md-chips>
+            </div>
+        </div>
+    </md-content>
+    <md-tabs ng-show="logsCtrl.tabs.length > 0" md-selected="logsCtrl.selectedTabIndex">
+        <md-tab ng-repeat="tab in logsCtrl.tabs">
+            <md-tab-label>
+                {{tab.id | limitTo:23}}
+                 <span ng-if="tab.id.length > 23">...</span>
+                 <md-icon class="material-icons" export text="logsCtrl.sortLines(tab)" name="tab.id">file_download</md-icon>
+                 <md-icon class="material-icons" ng-click="tab.textFormat = true" ng-if="!tab.textFormat">text_format</md-icon>
+                 <md-icon class="material-icons" ng-click="tab.textFormat = false" ng-if="tab.textFormat">code</md-icon>
+                 <md-icon class="material-icons" ng-click="logsCtrl.removeTab(tab)">close</md-icon>
+            </md-tab-label>
+            <md-tab-body md-scroll-y layout="column" class="demo-tab tab{{$index%4}}" flex>
+                <div class="tab-content" ng-if="tab.textFormat" ng-bind="tab.content" resize></div>
+                <div class="tab-content" ng-if="!tab.textFormat" ng-bind-html="tab.content" resize></div>
+            </md-tab-body>
+        </md-tab>
+    </md-tabs>
+    <div ui-view></div>
+</div>
