@@ -16,8 +16,10 @@
     "async": "^2.5.0",
     "express": "^4.15.4",
     "iconv-lite": "^0.4.19",
+    "moment": "^2.18.1",
     "ng-material-datetimepicker": "^1.9.2",
-    "socket.io": "~0.9.14"
+    "socket.io": "^2.0.3",
+    "socket.io-client": "^2.0.3"
   },
   "devDependencies": {
     "connect-modrewrite": "^0.10.1"

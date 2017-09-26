@@ -3,17 +3,14 @@ var express = require('express'),
     http = require('http'),
     server = http.createServer(app),
     io = require('socket.io').listen(server),
-    fs = require('fs'),
-    readline = require('readline'),
+    fs = require('fs'),    
     path = require('path'),
     iconv = require('iconv-lite'),
     config = require('./config.json'),
     moment = require('moment');
     async = require('async'),
     iconv = require('iconv-lite'),
-    spawn = require('child_process').spawn,
-    dirname = __dirname,
-    s = Date.now();
+    spawn = require('child_process').spawn;
 
 app
 .use(express.static(__dirname + '/client'))
@@ -25,17 +22,11 @@ app
    console.log( error.stack );
 });
 
-server.listen(process.env.PORT || 3333, process.env.IP || "0.0.0.0", function () {
+server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function () {
     'use strict';
     var addr = server.address();
     console.log("Chat server listening at", addr.address + ":" + addr.port);
 });
-
-function exists(regex, text) {
-    'use strict';
-    regex = regex.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
-    return new RegExp(regex).test(text);
-}
 
 function find(socket, query, app) {
     var tempStart = moment(query.dateTimeStart),
@@ -96,7 +87,7 @@ function findInPaths(socket, query, app){
 
 io.on('connection', function (socket) {
     'use strict';
-
+    debugger;
     socket.on('listApps', function () {
         socket.emit('listApps', fs.readdirSync(config.pastaBase).map(function (file) {
             var isDirectory = fs.lstatSync(path.join(config.pastaBase, file)).isDirectory();

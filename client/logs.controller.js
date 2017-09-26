@@ -30,7 +30,8 @@
     app.run(function () {})
     .controller('LogsController', ['$scope', '$rootScope', '$filter', '$timeout', '$mdSidenav', '$http', '$element', '$mdToast', '$state', '$stateParams',
     function ($scope, $rootScope, $filter, $timeout, $mdSidenav, $http, $element, $mdToast, $state, $stateParams) {
-        var socket = io.connect(),
+        // var socket = io('http://localhost:3000'),
+        var socket = io.connect('/'),
             controller = this;
 
         $scope.socket = socket;
@@ -42,10 +43,8 @@
         controller.selectedApps = [];
         controller.pesquisando = false;
         controller.isRegex = false;
-        // controller.dateTimeStart = moment().subtract(1, 'h');
-        // controller.dateTimeEnd = moment();
-        controller.dateTimeStart = moment('2017-09-18 12:00:00');
-        controller.dateTimeEnd = moment('2017-09-18 12:30:00');
+        controller.dateTimeStart = moment().subtract(1, 'h');
+        controller.dateTimeEnd = moment();
 
         controller.removeTab = function (tab) {
             controller.tabs.splice(controller.tabs.indexOf(tab), 1);
@@ -130,7 +129,6 @@
         });
 
         socket.on('complete', function (obj) {
-            console.log(obj.filePaths);
             controller.tabs.forEach(function (tab){
                 if (tab && !tab.content && obj.tabIds.indexOf(tab.id) >= 0) {
                     $timeout(function() {
