@@ -3,7 +3,7 @@ var express = require('express'),
     http = require('http'),
     server = http.createServer(app),
     io = require('socket.io').listen(server),
-    fs = require('fs'),    
+    fs = require('fs'),
     path = require('path'),
     iconv = require('iconv-lite'),
     config = require('./config.json'),
@@ -86,8 +86,7 @@ function findInPaths(socket, query, app){
 }
 
 io.on('connection', function (socket) {
-    'use strict';
-    debugger;
+    'use strict';    
     socket.on('listApps', function () {
         socket.emit('listApps', fs.readdirSync(config.pastaBase).map(function (file) {
             var isDirectory = fs.lstatSync(path.join(config.pastaBase, file)).isDirectory();
