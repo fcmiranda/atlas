@@ -35,6 +35,7 @@
             <md-button type="submit" class="md-raised md-primary" ng-disabled="myForm.$invalid || (!logsCtrl.isRegex && logsCtrl.chips.length == 0)">Pesquisar</md-button>
         </div>
     </form>
+    <md-progress-linear ng-if="logsCtrl.loading" md-mode="Indeterminate"></md-progress-linear>
     <md-content ng-show="logsCtrl.tabs.length > 0">
         <div flex layout="row" class="helpbar">
             <div flex>
@@ -45,8 +46,7 @@
     <md-tabs ng-show="logsCtrl.tabs.length > 0" md-selected="logsCtrl.selectedTabIndex">
         <md-tab ng-repeat="tab in logsCtrl.tabs">
             <md-tab-label>
-                {{tab.id | limitTo:23}}
-                 <span ng-if="tab.id.length > 23">...</span>
+                {{tab.id | limitTo:23}}                 
                  <md-icon class="material-icons" export text="logsCtrl.sortLines(tab)" name="tab.id">file_download</md-icon>
                  <md-icon class="material-icons" ng-click="tab.textFormat = true" ng-if="!tab.textFormat">text_format</md-icon>
                  <md-icon class="material-icons" ng-click="tab.textFormat = false" ng-if="tab.textFormat">code</md-icon>

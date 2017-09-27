@@ -33,6 +33,9 @@ function find(socket, query, app) {
         end = moment(query.dateTimeEnd),
         actualPath = path.join(config.pastaBase, app.name);
         query.paths = [];
+
+        //insere pasta do dia anterior na verificacao, pois pode haver arquivos do dia seguinte
+        query.paths.push(path.join(actualPath, moment(tempStart).subtract(1, 'day').format('YYYY/MM/DD')));
         do {
         	query.paths.push(path.join(actualPath, tempStart.format('YYYY/MM/DD')));
             tempStart.add(1, 'day');
@@ -56,11 +59,22 @@ function findInPaths(socket, query, app){
                     }
                     callback2();
                 });
-            }, function(files){
+            }, function(){
                 callback();
             });
         })
-    }, function (err, fileInfos) {
+    }, function () {
+        if(filePaths.length <= 0){
+            socket.emit('complete', {
+                tabIds: [app.name + ":" + query.expression],
+                message: {
+                    type: 'warn',
+                    description: 'Não há arquivos entre o periodo selecionado'
+                }
+            });
+            return
+        }
+
         var ls = spawn('rg', [query.expression].concat(filePaths).concat(['--no-filename','--no-line-number']));
 
         ls.stdout.on('data', (data) => {
@@ -77,16 +91,30 @@ function findInPaths(socket, query, app){
         });
 
         ls.on('close', (code) => {
-        	socket.emit('complete', {
-                tabIds: [app.name + ":" + query.expression],
-                files: filePaths
-            });
+            var complete = 0;
+            if(code == 0){
+                complete = {
+                    tabIds: [app.name + ":" + query.expression],
+                    message: {
+                        type: 'success',
+                        description: 'Sucesso!'
+                    }
+                }
+            }else{
+                complete = {
+                    message: {
+                        type: 'warn',
+                        description: 'Expressão não encontrada'
+                    }
+                }
+            }
+        	socket.emit('complete', complete);
         });
     });
 }
 
 io.on('connection', function (socket) {
-    'use strict';    
+    'use strict';
     socket.on('listApps', function () {
         socket.emit('listApps', fs.readdirSync(config.pastaBase).map(function (file) {
             var isDirectory = fs.lstatSync(path.join(config.pastaBase, file)).isDirectory();

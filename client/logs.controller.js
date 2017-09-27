@@ -42,6 +42,7 @@
         controller.chipsExpression = '';
         controller.selectedApps = [];
         controller.pesquisando = false;
+        controller.loading = false;
         controller.isRegex = false;
         controller.dateTimeStart = moment().subtract(1, 'h');
         controller.dateTimeEnd = moment();
@@ -72,6 +73,7 @@
             if (controller.pesquisando && controller.chips.length > 0 && controller.dateTimeStart && controller.dateTimeEnd && controller.selectedApps.length > 0) {
                 return;
             }
+            controller.loading = true;
             socket.emit('pesquisar', {
                 apps: controller.selectedApps,
                 expression: (controller.isRegex) ? controller.regexExpression : controller.chipsExpression,
@@ -129,10 +131,11 @@
         });
 
         socket.on('complete', function (obj) {
+            controller.loading = false;
+            obj.message && showToast(obj.message);
             controller.tabs.forEach(function (tab){
                 if (tab && !tab.content && obj.tabIds.indexOf(tab.id) >= 0) {
                     $timeout(function() {
-                        showToast('sucesso!');
                         tab.content = controller.sortLines(tab);
                     })
                 }
@@ -149,11 +152,16 @@
           return text.replace(/[-[\]{}()*+?.,\\^$|#]/g, '\\$&');
         }
 
-        function showToast (text) {
+        function showToast (toast) {
+            var classMap = {
+                success: 'md-accent',
+                warn: 'md-warn'
+            }
+
             var toast = $mdToast.simple()
-              .textContent(text)
+              .textContent(toast.description)
               .highlightAction(true)
-              .highlightClass('md-accent')// Accent is used by default, this just demonstrates the usage.
+              .highlightClass(classMap[toast.type])// Accent is used by default, this just demonstrates the usage.
               .position('bottom left');
             $mdToast.show(toast);
         }

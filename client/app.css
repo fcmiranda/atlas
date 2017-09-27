@@ -25,6 +25,7 @@ md-tab-item md-icon {
     border: none;
     width: 17px;
     min-width: 17px;
+    max-width: 400px !important;
 }
 
 .md-tab {
